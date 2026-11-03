@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  EDITOR
+}
+
+enum TestimonialKind {
+  VIDEO
+  RESULT
+}
+
+enum InquiryStatus {
+  NEW
+  CONTACTED
+  CLOSED
+}
+
+// Fields typed Json hold translated text: { "en": "...", "bn": "..." }
+
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(EDITOR)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  title       Json
+  description Json
+  image       String
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("services")
+}
+
+model Project {
+  id         String   @id @default(uuid())
+  name       String
+  category   Json
+  image      String
+  url        String?
+  isFeatured Boolean  @default(false)
+  sortOrder  Int      @default(0)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("projects")
+}
+
+model Testimonial {
+  id        String          @id @default(uuid())
+  kind      TestimonialKind
+  name      String
+  role      Json
+  avatar    String?
+  image     String
+  videoUrl  String?
+  sortOrder Int             @default(0)
+  isActive  Boolean         @default(true)
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("testimonials")
+}
+
+model DeliveryStory {
+  id        String   @id @default(uuid())
+  title     Json
+  caption   Json
+  image     String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("delivery_stories")
+}
+
+model PricingPlan {
+  id         String   @id @default(uuid())
+  slug       String   @unique
+  name       Json
+  tagline    Json
+  badge      Json?
+  price      Int
+  currency   String   @default("USD")
+  features   Json
+  isFeatured Boolean  @default(false)
+  sortOrder  Int      @default(0)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("pricing_plans")
+}
+
+model Faq {
+  id        String   @id @default(uuid())
+  question  Json
+  answer    Json
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("faqs")
+}
+
+model TeamMember {
+  id        String   @id @default(uuid())
+  name      Json
+  role      Json
+  photo     String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("team_members")
+}
+
+model ClientLogo {
+  id        String   @id @default(uuid())
+  name      String
+  logo      String
+  url       String?
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("client_logos")
+}
+
+model Inquiry {
+  id        String        @id @default(uuid())
+  name      String
+  email     String
+  phone     String
+  company   String?
+  service   String?
+  message   String
+  locale    String        @default("en")
+  status    InquiryStatus @default(NEW)
+  notes     String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([status, createdAt])
+  @@map("inquiries")
+}
