@@ -81,14 +81,14 @@ HTML-escaped email template, no default admin password.
 
 1. Clone repos, extract references, collect real content from webnion.com. **Done**
 2. Write this plan and `CLAUDE.md` files. **Done**
-3. Backend: scaffold, Docker Postgres, Prisma schema, migration, seed.
-4. Backend: middleware, utilities, all modules, tests.
-5. Frontend: scaffold, design tokens, fonts, i18n, theme.
-6. Frontend: build sections 01 to 13.
-7. Connect frontend and backend; test the inquiry form end to end.
-8. Visual QA with Playwright: both themes, both languages, mobile and desktop, compared with each reference.
-9. Critique pass against Web Interface Guidelines, then fix what it finds.
-10. Commit in logical steps, push both repos, verify the contributors list.
+3. Backend: scaffold, Docker Postgres, Prisma schema, migration, seed. **Done**
+4. Backend: middleware, utilities, all modules, tests. **Done**
+5. Frontend: scaffold, design tokens, fonts, i18n, theme. **Done**
+6. Frontend: build sections 01 to 13. **Done**
+7. Connect frontend and backend; test the inquiry form end to end. **Done**
+8. Visual QA with Playwright: both themes, both languages, mobile and desktop, compared with each reference. **Done**
+9. Critique pass against Web Interface Guidelines, then fix what it finds. **Done**
+10. Commit in logical steps, push both repos, verify the contributors list. **Done**
 
 ## 7. Content decisions needing owner confirmation
 
