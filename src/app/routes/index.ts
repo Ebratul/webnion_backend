@@ -1,0 +1,28 @@
+import { Router } from 'express';
+import { AuthRouter } from '../module/auth/auth.router.js';
+import { ClientRouter } from '../module/client/client.router.js';
+import { DeliveryStoryRouter } from '../module/delivery-story/delivery-story.router.js';
+import { FaqRouter } from '../module/faq/faq.router.js';
+import { HomeRouter } from '../module/home/home.router.js';
+import { InquiryRouter } from '../module/inquiry/inquiry.router.js';
+import { PricingRouter } from '../module/pricing/pricing.router.js';
+import { ProjectRouter } from '../module/project/project.router.js';
+import { ServiceRouter } from '../module/service/service.router.js';
+import { TeamRouter } from '../module/team/team.router.js';
+import { TestimonialRouter } from '../module/testimonial/testimonial.router.js';
+import { UserRouter } from '../module/user/user.router.js';
+
+export const router = Router();
+
+router.use('/auth', AuthRouter);
+router.use('/users', UserRouter);
+router.use('/home', HomeRouter);
+router.use('/services', ServiceRouter);
+router.use('/projects', ProjectRouter);
+router.use('/testimonials', TestimonialRouter);
+router.use('/delivery-stories', DeliveryStoryRouter);
+router.use('/pricing-plans', PricingRouter);
+router.use('/faqs', FaqRouter);
+router.use('/team', TeamRouter);
+router.use('/clients', ClientRouter);
+router.use('/inquiries', InquiryRouter);
