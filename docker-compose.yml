@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: webnion-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: webnion
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-webnion_local}
+      POSTGRES_DB: webnion
+    ports:
+      - "127.0.0.1:5440:5432"
+    volumes:
+      - webnion-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U webnion -d webnion"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  webnion-db-data:
