@@ -31,8 +31,8 @@ colour and type always stay Webnion violet with Poppins / Hind Siliguri.
 
 | # | Section | Layout reference | Data source |
 | --- | --- | --- | --- |
-| 01 | Hero + Primary CTA | Planet horizon, cleaned up like the Landingplay reference | i18n |
-| 02 | Client Trust & Logos | Two-row project mosaic, then clients card with logo row | API: projects, clients |
+| 01 | Hero + Primary CTA | Charcoal background with warm corners, one button, logo row (client's brief) | i18n, API: clients |
+| 02 | Client Work | Two-row project mosaic | API: projects |
 | 03 | Customer Problems | Split layout: heading left, chat-style panel right (Chatify) | i18n |
 | 04 | Services & Solutions | Three image cards with CTA and arrow | API: services |
 | 05 | Business Outcomes | Editorial split with staggered images (Expert Insights) | i18n |
@@ -96,7 +96,7 @@ All content comes from webnion.com or the supplied references. Where those disag
 
 | Item | Conflict | Used for now |
 | --- | --- | --- |
-| Client count | 500+ (screenshot), 100+ (site trust line), 80+ (site reviews) | 100+ |
+| Client count | The client's brief removes the count from the hero | Not shown |
 | Client logos | GoDaddy, Hotjar, Tripadvisor and Google Fonts appear in the screenshot; the live site shows real client logos | Real client logos |
 | Pricing | Reference shows four tiers; the live site has three | The three live plans: $100, $400, $899 |
 | Process, FAQ answers, Bangla copy | Not on the live site | Newly written, needs review |
