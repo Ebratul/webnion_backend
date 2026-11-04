@@ -1,11 +1,40 @@
 import { PrismaPg } from '@prisma/adapter-pg';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
-import { PrismaClient } from '../src/generated/prisma/client.js';
+import { readFileSync } from 'node:fs';
+import { Prisma, PrismaClient } from '../src/generated/prisma/client.js';
 
 dotenv.config({ quiet: true });
 
 const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
+
+const readData = <T>(file: string) => JSON.parse(readFileSync(new URL(`./data/${file}`, import.meta.url), 'utf8')) as T;
+
+interface ProjectDetails {
+  client: string | null;
+  budget: Prisma.InputJsonValue | null;
+  location: Prisma.InputJsonValue | null;
+  sector: Prisma.InputJsonValue | null;
+  completedAt: string | null;
+  content: Prisma.InputJsonValue | null;
+}
+
+// Article text and project info live in JSON files because they are far longer than the rest of the seed
+const projectDetails = readData<Record<string, ProjectDetails>>('project-details.json');
+const caseStudies = readData<Prisma.CaseStudyCreateManyInput[]>('case-studies.json');
+
+const detailsFor = (slug: string) => {
+  const details = projectDetails[slug];
+  if (!details) throw new Error(`No project details for ${slug}`);
+  return {
+    client: details.client,
+    budget: details.budget ?? undefined,
+    location: details.location ?? undefined,
+    sector: details.sector ?? undefined,
+    completedAt: details.completedAt,
+    content: details.content ?? undefined,
+  };
+};
 
 const t = (en: string, bn: string) => ({ en, bn });
 const ordered = <T extends object>(rows: T[]) => rows.map((row, sortOrder) => ({ ...row, sortOrder }));
@@ -43,22 +72,17 @@ const services = ordered([
 ]);
 
 const project = (name: string, image: string, slug: string, category = ecommerce, isFeatured = true) => ({
+  slug,
   name,
   image: `/images/projects/${image}.webp`,
-  url: `https://webnion.com/project/${slug}`,
   category,
   isFeatured,
+  ...detailsFor(slug),
 });
 
 const projects = ordered([
-  project('Muqarraboon.com', 'muqarraboon', 'muqarrabooncom'),
-  project('Arabianfragrancebd.com', 'arabianfragrancebd', 'arabianfragrancebdcom'),
-  project('academynafia.com', 'academynafia', 'academy-nafia-website-design', t('E-learning Platform', 'ই-লার্নিং প্ল্যাটফর্ম')),
-  project('infixx.com', 'infixx', 'infixxcom', t('Service Website', 'সার্ভিস ওয়েবসাইট')),
-  project('bakemasterbd.com', 'bakemasterbd', 'bakemasterbdcom'),
-  project('Gigaloy.com', 'gigaloy', 'gigaloy-website', t('Business Solution', 'বিজনেস সলিউশন')),
-  project('Trishna Fashion', 'trishna-fashion', 'trishna-fashion-selocommerce-ecommerce-website'),
-  project('Academy Nafia Shop', 'academy-nafia-shop', 'academy-nafia-online-bookstore', t('Educational E-commerce', 'শিক্ষামূলক ই-কমার্স')),
+  project('Trishna Fashion', 'trishna-fashion', 'trishna-fashion-selocommerce-ecommerce-website', t('SeloCommerce E-commerce', 'SeloCommerce ই-কমার্স')),
+  project('Academy Nafia Shop', 'academy-nafia-shop', 'academy-nafia-online-bookstore', t('Educational E-commerce Website', 'শিক্ষামূলক ই-কমার্স ওয়েবসাইট')),
   project('My AT Shop', 'my-at-shop', 'organic-products-ecommerce-website'),
   project('AR Mehendi Design', 'ar-mehendi', 'ar-mehendi-design-ecommerce-website'),
   project('OneStop Mart BD', 'onestop-mart', 'onestop-mart-bd-ecommerce-website', t('WordPress E-commerce', 'ওয়ার্ডপ্রেস ই-কমার্স')),
@@ -67,9 +91,16 @@ const projects = ordered([
   project('Saltfoodmart.com', 'saltfoodmart', 'saltfoodmartcom'),
   project('Taskbazar.com', 'taskbazar', 'taskbazarcom', t('Web Application', 'ওয়েব অ্যাপ্লিকেশন')),
   project('Sabazarshop.com', 'sabazarshop', 'sabazarshopcom'),
+  project('Muqarraboon.com', 'muqarraboon', 'muqarrabooncom'),
+  project('Arabianfragrancebd.com', 'arabianfragrancebd', 'arabianfragrancebdcom'),
+  project('academynafia.com', 'academynafia', 'academy-nafia-website-design', t('E-learning Platform', 'ই-লার্নিং প্ল্যাটফর্ম')),
+  project('infixx.com', 'infixx', 'infixxcom', t('Service Website', 'সার্ভিস ওয়েবসাইট')),
+  project('bakemasterbd.com', 'bakemasterbd', 'bakemasterbdcom'),
+  project('Gigaloy.com', 'gigaloy', 'gigaloy-website', t('Solution', 'সলিউশন')),
 ]);
 
-const VIDEO_BASE = 'https://webnion.com/public/uploads/2026/03';
+// Videos are not in git: copy uploads/reviews to the server when deploying (see README)
+const VIDEO_BASE = '/uploads/reviews';
 
 const testimonials = ordered([
   {
@@ -78,7 +109,7 @@ const testimonials = ordered([
     role: ecommerce,
     avatar: '/images/avatars/bismillah.webp',
     image: '/images/avatars/bismillah.webp',
-    videoUrl: `${VIDEO_BASE}/1773838351_client_01_.mp4`,
+    videoUrl: `${VIDEO_BASE}/bismillahdryfoods.mp4`,
   },
   {
     kind: 'RESULT' as const,
@@ -93,7 +124,7 @@ const testimonials = ordered([
     role: t('Supermarket Owner', 'সুপারমার্কেট মালিক'),
     avatar: '/images/avatars/robb-abdur.webp',
     image: '/images/avatars/robb-abdur.webp',
-    videoUrl: `${VIDEO_BASE}/1773933134_Saltfoodmart.com.mp4`,
+    videoUrl: `${VIDEO_BASE}/saltfoodmart.mp4`,
   },
   {
     kind: 'VIDEO' as const,
@@ -101,7 +132,7 @@ const testimonials = ordered([
     role: t('Digital Marketer', 'ডিজিটাল মার্কেটার'),
     avatar: '/images/avatars/tanim-ahmed-arif.webp',
     image: '/images/avatars/tanim-ahmed-arif.webp',
-    videoUrl: `${VIDEO_BASE}/1773836933_client_02.mp4`,
+    videoUrl: `${VIDEO_BASE}/tanim-ahmed-arif.mp4`,
   },
   {
     kind: 'RESULT' as const,
@@ -123,7 +154,7 @@ const testimonials = ordered([
     role: t('Service Business', 'সার্ভিস ব্যবসা'),
     avatar: '/images/avatars/infixx.webp',
     image: '/images/avatars/infixx-poster.webp',
-    videoUrl: `${VIDEO_BASE}/1774534429_infixx.mp4`,
+    videoUrl: `${VIDEO_BASE}/infixx.mp4`,
   },
   {
     kind: 'RESULT' as const,
@@ -302,6 +333,17 @@ const seedIfEmpty = async (label: string, count: () => Promise<number>, insert: 
   console.log(`Seeded ${label}`);
 };
 
+// Projects created before detail pages existed get their details once. A row with a client is left alone,
+// so this never overwrites an edit.
+const backfillProjectDetails = async () => {
+  let updated = 0;
+  for (const slug of Object.keys(projectDetails)) {
+    const { count } = await prisma.project.updateMany({ where: { slug, client: null }, data: detailsFor(slug) });
+    updated += count;
+  }
+  console.log(`Backfilled details on ${updated} projects`);
+};
+
 const seedAdmin = async () => {
   const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
   const password = process.env.ADMIN_PASSWORD;
@@ -325,6 +367,8 @@ const main = async () => {
   await seedAdmin();
   await seedIfEmpty('services', () => prisma.service.count(), () => prisma.service.createMany({ data: services }));
   await seedIfEmpty('projects', () => prisma.project.count(), () => prisma.project.createMany({ data: projects }));
+  await backfillProjectDetails();
+  await seedIfEmpty('case studies', () => prisma.caseStudy.count(), () => prisma.caseStudy.createMany({ data: ordered(caseStudies) }));
   await seedIfEmpty('testimonials', () => prisma.testimonial.count(), () => prisma.testimonial.createMany({ data: testimonials }));
   await seedIfEmpty('delivery stories', () => prisma.deliveryStory.count(), () => prisma.deliveryStory.createMany({ data: deliveryStories }));
   await seedIfEmpty('pricing plans', () => prisma.pricingPlan.count(), () => prisma.pricingPlan.createMany({ data: pricingPlans }));

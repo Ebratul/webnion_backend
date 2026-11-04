@@ -53,20 +53,46 @@ model Service {
   @@map("services")
 }
 
+// Fields named content hold translated article blocks: { "en": [...], "bn": [...] }. bn is optional and falls back to en.
+
 model Project {
-  id         String   @id @default(uuid())
-  name       String
-  category   Json
-  image      String
-  url        String?
-  isFeatured Boolean  @default(false)
-  sortOrder  Int      @default(0)
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String    @id @default(uuid())
+  slug        String    @unique
+  name        String
+  category    Json
+  image       String
+  url         String?
+  client      String?
+  budget      Json?
+  location    Json?
+  sector      Json?
+  completedAt DateTime?
+  content     Json?
+  isFeatured  Boolean   @default(false)
+  sortOrder   Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@index([isActive, sortOrder])
   @@map("projects")
+}
+
+model CaseStudy {
+  id          String    @id @default(uuid())
+  slug        String    @unique
+  title       Json
+  category    Json
+  image       String
+  content     Json
+  publishedAt DateTime?
+  sortOrder   Int       @default(0)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("case_studies")
 }
 
 model Testimonial {

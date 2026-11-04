@@ -1,7 +1,10 @@
 import bcrypt from 'bcryptjs';
+import { rm } from 'node:fs/promises';
+import path from 'node:path';
 import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { app } from '../src/app.js';
+import { config } from '../src/app/config/index.js';
 import { prisma } from '../src/app/lib/prisma.js';
 
 const API = '/api/v1';
@@ -163,7 +166,148 @@ describe('content', () => {
   it('serves the aggregated homepage payload', async () => {
     const res = await request(app).get(`${API}/home?locale=bn`).expect(200);
     expect(Object.keys(res.body.data).sort()).toEqual(
-      ['clients', 'deliveryStories', 'faqs', 'pricingPlans', 'projects', 'services', 'team', 'testimonials'].sort(),
+      ['caseStudies', 'clients', 'deliveryStories', 'faqs', 'pricingPlans', 'projects', 'services', 'team', 'testimonials'].sort(),
     );
+  });
+});
+
+describe('project and case study pages', () => {
+  const blocks = [{ type: 'heading', text: 'Overview' }, { type: 'paragraph', text: 'Body.' }];
+  const projectBody = {
+    slug: 'test-project',
+    name: 'Test Project',
+    category: { en: 'Store', bn: 'স্টোর' },
+    image: '/images/projects/test.webp',
+    client: 'Test Client',
+    sector: { en: 'Retail', bn: 'রিটেইল' },
+    content: { en: blocks },
+  };
+  const caseStudyBody = {
+    slug: 'test-case-study',
+    title: { en: 'Title', bn: 'শিরোনাম' },
+    category: { en: 'Travel', bn: 'ট্রাভেল' },
+    image: '/images/case-studies/test.webp',
+    content: { en: blocks, bn: [{ type: 'paragraph', text: 'বাংলা।' }] },
+  };
+
+  beforeAll(async () => {
+    await prisma.project.deleteMany();
+    await prisma.caseStudy.deleteMany();
+  });
+
+  it('serves a project by slug, falling back to English content for bn', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    await request(app).post(`${API}/projects`).set('Authorization', token).send(projectBody).expect(201);
+
+    const res = await request(app).get(`${API}/projects/test-project?locale=bn`).expect(200);
+    expect(res.body.data).toMatchObject({ slug: 'test-project', client: 'Test Client', sector: 'রিটেইল', budget: null, contentLocale: 'en' });
+    expect(res.body.data.content).toEqual(blocks);
+  });
+
+  it('keeps article content out of the list payload', async () => {
+    const res = await request(app).get(`${API}/projects`).expect(200);
+    expect(res.body.data[0].slug).toBe('test-project');
+    expect(res.body.data[0]).not.toHaveProperty('content');
+  });
+
+  it('returns 404 for unknown and inactive slugs', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    await request(app).get(`${API}/projects/missing`).expect(404);
+    await request(app).post(`${API}/projects`).set('Authorization', token).send({ ...projectBody, slug: 'hidden', isActive: false }).expect(201);
+    await request(app).get(`${API}/projects/hidden`).expect(404);
+  });
+
+  it('rejects malformed slugs and content blocks', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    await request(app).get(`${API}/projects/Not_A_Slug`).expect(400);
+    await request(app)
+      .post(`${API}/projects`)
+      .set('Authorization', token)
+      .send({ ...projectBody, slug: 'bad-blocks', content: { en: [{ type: 'html', text: '<script>' }] } })
+      .expect(400);
+  });
+
+  it('serves a case study in the requested locale', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    await request(app).post(`${API}/case-studies`).set('Authorization', token).send(caseStudyBody).expect(201);
+
+    const res = await request(app).get(`${API}/case-studies/test-case-study?locale=bn`).expect(200);
+    expect(res.body.data).toMatchObject({ title: 'শিরোনাম', contentLocale: 'bn' });
+    expect(res.body.data.content).toEqual(caseStudyBody.content.bn);
+  });
+});
+
+describe('admin editing', () => {
+  it('leaves fields out of a PATCH untouched', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    const created = await request(app)
+      .post(`${API}/faqs`)
+      .set('Authorization', token)
+      .send({ ...faqBody, sortOrder: 7, isActive: false })
+      .expect(201);
+
+    const res = await request(app)
+      .patch(`${API}/faqs/${created.body.data.id}`)
+      .set('Authorization', token)
+      .send({ question: { en: 'Changed?', bn: 'বদলেছে?' } })
+      .expect(200);
+    expect(res.body.data).toMatchObject({ sortOrder: 7, isActive: false });
+  });
+
+  it('keeps a user role when the role is not sent', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    const admin = await prisma.user.create({
+      data: { name: 'Second', email: 'second@test.dev', role: 'ADMIN', passwordHash: await bcrypt.hash(ADMIN.password, 4) },
+    });
+    const res = await request(app).patch(`${API}/users/${admin.id}`).set('Authorization', token).send({ name: 'Renamed' }).expect(200);
+    expect(res.body.data).toMatchObject({ name: 'Renamed', role: 'ADMIN' });
+  });
+
+  it('clears optional translated fields with null', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    const created = await request(app)
+      .post(`${API}/projects`)
+      .set('Authorization', token)
+      .send({
+        slug: 'clearable',
+        name: 'Clearable',
+        category: { en: 'Store', bn: 'স্টোর' },
+        image: '/uploads/a.png',
+        budget: { en: 'Custom', bn: 'কাস্টম' },
+        content: { en: [{ type: 'paragraph', text: 'Body.' }] },
+      })
+      .expect(201);
+
+    const res = await request(app)
+      .patch(`${API}/projects/${created.body.data.id}`)
+      .set('Authorization', token)
+      .send({ budget: null, content: null })
+      .expect(200);
+    expect(res.body.data).toMatchObject({ budget: null, content: null });
+  });
+});
+
+describe('uploads', () => {
+  const png = Buffer.from('89504e470d0a1a0a0000000d49484452', 'hex');
+
+  it('requires a login', async () => {
+    await request(app).post(`${API}/uploads`).attach('file', png, 'a.png').expect(401);
+  });
+
+  it('stores an image under a generated name and serves it', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    const res = await request(app).post(`${API}/uploads`).set('Authorization', token).attach('file', png, '../../evil.html').expect(201);
+    expect(res.body.data.path).toMatch(/^\/uploads\/[0-9a-f-]+\.png$/);
+
+    const served = await request(app).get(res.body.data.path).expect(200);
+    expect(served.headers['content-type']).toBe('image/png');
+    await rm(path.join(config.uploadDir, path.basename(res.body.data.path)));
+  });
+
+  it('rejects files that are not images or videos, whatever they are named', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    const svg = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>');
+    await request(app).post(`${API}/uploads`).set('Authorization', token).attach('file', svg, 'photo.png').expect(400);
+    await request(app).post(`${API}/uploads`).set('Authorization', token).expect(400);
   });
 });

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { AuthRouter } from '../module/auth/auth.router.js';
+import { CaseStudyRouter } from '../module/case-study/case-study.router.js';
 import { ClientRouter } from '../module/client/client.router.js';
 import { DeliveryStoryRouter } from '../module/delivery-story/delivery-story.router.js';
 import { FaqRouter } from '../module/faq/faq.router.js';
@@ -20,6 +21,7 @@ router.use('/users', UserRouter);
 router.use('/home', HomeRouter);
 router.use('/services', ServiceRouter);
 router.use('/projects', ProjectRouter);
+router.use('/case-studies', CaseStudyRouter);
 router.use('/testimonials', TestimonialRouter);
 router.use('/delivery-stories', DeliveryStoryRouter);
 router.use('/pricing-plans', PricingRouter);

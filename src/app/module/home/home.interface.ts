@@ -1,3 +1,4 @@
+import type { PublicCaseStudy } from '../case-study/case-study.interface.js';
 import type { PublicClient } from '../client/client.interface.js';
 import type { PublicDeliveryStory } from '../delivery-story/delivery-story.interface.js';
 import type { PublicFaq } from '../faq/faq.interface.js';
@@ -10,6 +11,7 @@ import type { PublicTestimonial } from '../testimonial/testimonial.interface.js'
 export interface HomePayload {
   services: PublicService[];
   projects: PublicProject[];
+  caseStudies: PublicCaseStudy[];
   testimonials: PublicTestimonial[];
   deliveryStories: PublicDeliveryStory[];
   pricingPlans: PublicPricing[];
