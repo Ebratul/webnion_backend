@@ -15,6 +15,9 @@ export const inquiryNotificationTemplate = (inquiry: Inquiry) => {
     ['Phone', inquiry.phone],
     ['Company', inquiry.company],
     ['Service', inquiry.service],
+    ['Budget', inquiry.budget],
+    ['Country', inquiry.country],
+    ['Existing website', inquiry.existingWebsite],
     ['Language', inquiry.locale],
   ];
 

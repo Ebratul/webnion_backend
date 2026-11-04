@@ -219,6 +219,9 @@ model Inquiry {
   phone     String
   company   String?
   service   String?
+  budget    String?
+  country   String?
+  existingWebsite String?
   message   String
   locale    String        @default("en")
   status    InquiryStatus @default(NEW)

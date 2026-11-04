@@ -8,17 +8,21 @@ const optionalText = (max: number) =>
     .transform((value) => value || undefined)
     .optional();
 
+// The contact page only requires an email, so these may be blank, but must be valid when filled in
+const blankOr = (schema: z.ZodString) =>
+  z.preprocess((value) => (typeof value === 'string' ? value.trim() : value), z.union([z.literal(''), schema]).default(''));
+
 export const InquiryValidation = {
   create: z.strictObject({
-    name: z.string().trim().min(2, 'Name is too short').max(100),
+    name: blankOr(z.string().min(2, 'Name is too short').max(100)),
     email: z.email('Enter a valid email address').trim().toLowerCase().max(200),
-    phone: z
-      .string()
-      .trim()
-      .regex(/^\+?[0-9][0-9\s()-]{6,18}$/, 'Enter a valid phone number'),
+    phone: blankOr(z.string().regex(/^\+?[0-9][0-9\s()-]{6,18}$/, 'Enter a valid phone number')),
     company: optionalText(150),
     service: optionalText(150),
-    message: z.string().trim().min(10, 'Please add a little more detail').max(2000),
+    budget: optionalText(60),
+    country: optionalText(100),
+    existingWebsite: optionalText(300),
+    message: blankOr(z.string().min(10, 'Please add a little more detail').max(2000)),
     locale: z.enum(['en', 'bn']).default('en'),
     // Honeypot: hidden from people, filled in by bots
     website: z.string().max(200).optional(),

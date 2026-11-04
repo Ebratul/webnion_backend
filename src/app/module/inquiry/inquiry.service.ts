@@ -14,7 +14,7 @@ const create = async ({ website, ...data }: CreateInquiryInput) => {
   void sendMail({
     to: config.INQUIRY_NOTIFY_TO,
     replyTo: inquiry.email,
-    subject: `New project inquiry from ${inquiry.name.replace(/[\r\n]+/g, ' ')}`,
+    subject: `New project inquiry from ${(inquiry.name || inquiry.email).replace(/[\r\n]+/g, ' ')}`,
     html: inquiryNotificationTemplate(inquiry),
   }).catch((error) => console.error('Inquiry email failed', error));
 };
