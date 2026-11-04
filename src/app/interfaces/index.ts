@@ -4,6 +4,18 @@ export type Locale = 'en' | 'bn';
 
 export type LocalizedText = Record<Locale, string>;
 
+export type ContentBlock =
+  | { type: 'heading'; text: string }
+  | { type: 'paragraph'; text: string }
+  | { type: 'list'; items: string[] }
+  | { type: 'image'; src: string };
+
+export interface LocalizedContent {
+  blocks: ContentBlock[];
+  // The locale the blocks are actually written in, which differs from the request when a translation is missing
+  locale: Locale;
+}
+
 export interface AuthUser {
   id: string;
   role: Role;

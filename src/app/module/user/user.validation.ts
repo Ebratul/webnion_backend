@@ -4,7 +4,7 @@ const createUser = z.strictObject({
   name: z.string().trim().min(2).max(100),
   email: z.email().trim().toLowerCase(),
   password: z.string().min(10, 'Password must be at least 10 characters').max(72),
-  role: z.enum(['ADMIN', 'EDITOR']).default('EDITOR'),
+  role: z.enum(['ADMIN', 'EDITOR']).optional(),
 });
 
 export const UserValidation = {
