@@ -10,6 +10,7 @@ import { ProjectRouter } from '../module/project/project.router.js';
 import { ServiceRouter } from '../module/service/service.router.js';
 import { TeamRouter } from '../module/team/team.router.js';
 import { TestimonialRouter } from '../module/testimonial/testimonial.router.js';
+import { UploadRouter } from '../module/upload/upload.router.js';
 import { UserRouter } from '../module/user/user.router.js';
 
 export const router = Router();
@@ -26,3 +27,4 @@ router.use('/faqs', FaqRouter);
 router.use('/team', TeamRouter);
 router.use('/clients', ClientRouter);
 router.use('/inquiries', InquiryRouter);
+router.use('/uploads', UploadRouter);

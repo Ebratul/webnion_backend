@@ -17,6 +17,7 @@ const start = async () => {
   await prisma.$connect();
   server = app.listen(config.PORT, () => {
     console.log(`Webnion API listening on port ${config.PORT}`);
+    console.log(`Uploads are stored on ${config.cloudinary ? `Cloudinary (${config.cloudinary.cloudName})` : `disk (${config.uploadDir})`}`);
   });
 };
 

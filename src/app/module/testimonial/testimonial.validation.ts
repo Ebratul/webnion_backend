@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { assetSchema, httpUrlSchema, localizedTextSchema, sortFields } from '../../utils/validators.js';
+import { assetSchema, localizedTextSchema, sortFields } from '../../utils/validators.js';
 
 const createTestimonial = z.strictObject({
   kind: z.enum(['VIDEO', 'RESULT']),
@@ -7,7 +7,7 @@ const createTestimonial = z.strictObject({
   role: localizedTextSchema,
   avatar: assetSchema.nullable().optional(),
   image: assetSchema,
-  videoUrl: httpUrlSchema.nullable().optional(),
+  videoUrl: assetSchema.nullable().optional(),
   ...sortFields,
 });
 

@@ -1,5 +1,6 @@
 node_modules/
 dist/
+uploads/
 coverage/
 src/generated/
 .env
@@ -7,3 +8,4 @@ src/generated/
 !.env.example
 *.log
 .DS_Store
+uploads-test-cloudinary/
