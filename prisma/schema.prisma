@@ -78,6 +78,29 @@ model Project {
   @@map("projects")
 }
 
+model Product {
+  id         String   @id @default(uuid())
+  slug       String   @unique
+  name       Json
+  summary    Json
+  image      String
+  type       String
+  category   String
+  pricing    String   @default("PAID")
+  price      Int?
+  currency   String   @default("USD")
+  url        String?
+  views      Int      @default(0)
+  isFeatured Boolean  @default(false)
+  sortOrder  Int      @default(0)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("products")
+}
+
 model CaseStudy {
   id          String    @id @default(uuid())
   slug        String    @unique
