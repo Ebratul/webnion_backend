@@ -33,7 +33,7 @@ site opens in dark mode.
 | --- | --- | --- | --- |
 | 01 | Hero + Primary CTA | Charcoal in dark mode, cream in light mode, one button (client's brief) | i18n |
 | 02 | Client Trust & Logos | Two-row project mosaic, then a simple logo row | API: projects, clients |
-| 03 | Customer Problems | Split layout: heading left, chat-style panel right (Chatify) | i18n |
+| 03 | Customer Problems | Split layout: heading left, working demo chatbot right (Chatify) | i18n |
 | 04 | Services & Solutions | Three image cards with CTA and arrow | API: services |
 | 05 | Business Outcomes | Editorial split with staggered images (Expert Insights) | i18n |
 | 06 | Featured Projects & Case Studies | Dark carousel of project cards with pagination dots | API: projects |
