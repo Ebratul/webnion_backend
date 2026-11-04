@@ -21,6 +21,7 @@ interface ProjectDetails {
 
 // Article text and project info live in JSON files because they are far longer than the rest of the seed
 const projectDetails = readData<Record<string, ProjectDetails>>('project-details.json');
+const serviceDetails = readData<Record<string, { content: Prisma.InputJsonValue; faqs: Prisma.InputJsonValue }>>('service-details.json');
 const caseStudies = readData<Prisma.CaseStudyCreateManyInput[]>('case-studies.json');
 
 const detailsFor = (slug: string) => {
@@ -344,6 +345,16 @@ const backfillProjectDetails = async () => {
   console.log(`Backfilled details on ${updated} projects`);
 };
 
+// Services created before detail pages existed get their details once. A row with content is left alone.
+const backfillServiceDetails = async () => {
+  let updated = 0;
+  for (const [slug, details] of Object.entries(serviceDetails)) {
+    const { count } = await prisma.service.updateMany({ where: { slug, content: { equals: Prisma.DbNull } }, data: details });
+    updated += count;
+  }
+  console.log(`Backfilled details on ${updated} services`);
+};
+
 const seedAdmin = async () => {
   const email = process.env.ADMIN_EMAIL?.trim().toLowerCase();
   const password = process.env.ADMIN_PASSWORD;
@@ -368,6 +379,7 @@ const main = async () => {
   await seedIfEmpty('services', () => prisma.service.count(), () => prisma.service.createMany({ data: services }));
   await seedIfEmpty('projects', () => prisma.project.count(), () => prisma.project.createMany({ data: projects }));
   await backfillProjectDetails();
+  await backfillServiceDetails();
   await seedIfEmpty('case studies', () => prisma.caseStudy.count(), () => prisma.caseStudy.createMany({ data: ordered(caseStudies) }));
   await seedIfEmpty('testimonials', () => prisma.testimonial.count(), () => prisma.testimonial.createMany({ data: testimonials }));
   await seedIfEmpty('delivery stories', () => prisma.deliveryStory.count(), () => prisma.deliveryStory.createMany({ data: deliveryStories }));

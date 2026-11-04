@@ -44,6 +44,9 @@ model Service {
   title       Json
   description Json
   image       String
+  content     Json?
+  // Same format as content: each heading is a question and the paragraphs after it are the answer
+  faqs        Json?
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())

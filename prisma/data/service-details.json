@@ -1,0 +1,406 @@
+{
+  "custom-website-design": {
+    "content": {
+      "en": [
+        {
+          "type": "heading",
+          "text": "Custom Website Design"
+        },
+        {
+          "type": "paragraph",
+          "text": "Professional, brand-focused websites designed to convert visitors into customers."
+        },
+        {
+          "type": "paragraph",
+          "text": "A professional website is the digital foundation of your business. At Webnion, we design custom websites that are fast, modern, and built to convert visitors into customers. Our designs are tailored to reflect your brand identity and deliver a seamless experience across all devices."
+        },
+        {
+          "type": "paragraph",
+          "text": "Unlike generic templates, our custom website design focuses on strategy, usability, and performance. Every layout, section, and interaction is designed to engage your audience and help your business grow online."
+        },
+        {
+          "type": "heading",
+          "text": "What We Deliver"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Unique website design tailored to your brand",
+            "Fully responsive layouts for mobile, tablet, and desktop",
+            "Fast loading and optimized performance",
+            "SEO-friendly website structure",
+            "Secure and scalable development",
+            "User-focused UI/UX design"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Our Development Approach"
+        },
+        {
+          "type": "paragraph",
+          "text": "We combine design strategy with modern development technologies to build powerful websites. From business websites to custom platforms, our team ensures your website not only looks great but performs exceptionally well."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Custom UI/UX design process",
+            "Modern front-end development",
+            "Secure backend architecture",
+            "Scalable infrastructure",
+            "Future-ready development standards"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Why Choose Webnion"
+        },
+        {
+          "type": "paragraph",
+          "text": "Webnion focuses on building premium websites that represent your brand professionally and help you reach customers globally. Our goal is to deliver digital solutions that are reliable, scalable, and built for long-term growth."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Professional design standards",
+            "High-performance websites",
+            "SEO optimized structure",
+            "Secure development practices",
+            "Ongoing support and maintenance"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Whether you are a startup, company, or growing brand, Webnion can create a powerful online presence that helps your business succeed in the digital world."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Custom UI/UX Design",
+            "Responsive Mobile-Friendly Layout",
+            "Fast Loading Website",
+            "SEO Optimized Structure",
+            "Secure & Scalable Development"
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/images/services/studio-team.webp"
+        },
+        {
+          "type": "image",
+          "src": "/images/services/studio-office.webp"
+        }
+      ]
+    },
+    "faqs": {
+      "en": [
+        {
+          "type": "heading",
+          "text": "What is a custom website design?"
+        },
+        {
+          "type": "paragraph",
+          "text": "A custom website design is a fully tailored website built specifically for your business, brand identity, and customer experience rather than using a generic template."
+        },
+        {
+          "type": "heading",
+          "text": "How long does it take to build a custom website?"
+        },
+        {
+          "type": "paragraph",
+          "text": "The timeline depends on the project complexity, but most custom websites take between 7 to 30 days from planning to launch."
+        },
+        {
+          "type": "heading",
+          "text": "Will my website be mobile friendly?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Yes. All websites we design are fully responsive, ensuring perfect performance on mobile phones, tablets, and desktops."
+        },
+        {
+          "type": "heading",
+          "text": "Can I update the website myself?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Yes. We can integrate an easy-to-use CMS so you can update content, images, and pages without technical knowledge."
+        }
+      ]
+    }
+  },
+  "ecommerce-development": {
+    "content": {
+      "en": [
+        {
+          "type": "heading",
+          "text": "E-commerce Development"
+        },
+        {
+          "type": "paragraph",
+          "text": "Powerful online stores designed to sell more, scale faster, and grow your business globally."
+        },
+        {
+          "type": "paragraph",
+          "text": "E-commerce is one of the fastest growing industries in the digital world. At Webnion, we build powerful and scalable e-commerce websites that help businesses sell products online efficiently and reach customers worldwide."
+        },
+        {
+          "type": "paragraph",
+          "text": "Our e-commerce solutions are designed with performance, security, and user experience in mind. From product browsing to checkout, every step is optimized to increase conversions and make shopping easy for customers."
+        },
+        {
+          "type": "heading",
+          "text": "What We Provide"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Custom e-commerce website design",
+            "Product and inventory management system",
+            "Secure online payment integration",
+            "Mobile-friendly shopping experience",
+            "Order management dashboard",
+            "Fast loading and optimized performance"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Advanced E-commerce Features"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Multiple payment gateway integration",
+            "Product variations and stock management",
+            "Discount and coupon system",
+            "Shipping and delivery management",
+            "Customer account and order tracking",
+            "Marketing tools and analytics integration"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Our Development Process"
+        },
+        {
+          "type": "paragraph",
+          "text": "At Webnion, we follow a structured development process to build high-performing e-commerce websites. Our team focuses on creating a seamless shopping experience that helps businesses increase sales and manage operations efficiently."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Business requirement analysis",
+            "Custom UI/UX design",
+            "Secure backend development",
+            "Payment and system integration",
+            "Testing and performance optimization",
+            "Launch and ongoing support"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Why Choose Webnion for E-commerce Development"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Professional and scalable e-commerce architecture",
+            "Fast and secure online stores",
+            "SEO-friendly product pages",
+            "Mobile optimized shopping experience",
+            "Long-term support and maintenance"
+          ]
+        },
+        {
+          "type": "paragraph",
+          "text": "Whether you are launching a new online store or upgrading an existing one, Webnion can build a powerful e-commerce platform that helps you grow your business and reach customers worldwide."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Custom Online Store Development",
+            "Secure Payment Integration",
+            "Product & Inventory Management",
+            "Mobile-Friendly Shopping Experience",
+            "Order & Customer Management"
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/images/services/studio-office.webp"
+        },
+        {
+          "type": "image",
+          "src": "/images/services/studio-team.webp"
+        }
+      ]
+    },
+    "faqs": {
+      "en": [
+        {
+          "type": "heading",
+          "text": "What is e-commerce development?"
+        },
+        {
+          "type": "paragraph",
+          "text": "E-commerce development is the process of building an online store where businesses can sell products or services, manage orders, and accept online payments securely."
+        },
+        {
+          "type": "heading",
+          "text": "Which payment gateways can be integrated?"
+        },
+        {
+          "type": "paragraph",
+          "text": "We can integrate various payment gateways including Stripe, PayPal, SSLCommerz, and other local or international payment systems."
+        },
+        {
+          "type": "heading",
+          "text": "Can I manage products and orders easily?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Yes. Our e-commerce websites include a powerful admin dashboard where you can manage products, orders, customers, and inventory easily."
+        },
+        {
+          "type": "heading",
+          "text": "Is the website mobile friendly?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Yes. All our e-commerce websites are fully responsive, ensuring smooth shopping experience on mobile, tablet, and desktop devices."
+        }
+      ]
+    }
+  },
+  "business-website-optimization": {
+    "content": {
+      "en": [
+        {
+          "type": "heading",
+          "text": "Business Website Optimization"
+        },
+        {
+          "type": "paragraph",
+          "text": "Boost performance, security, and conversions with expert-level improvements."
+        },
+        {
+          "type": "paragraph",
+          "text": "A slow or poorly optimized website can negatively impact your business growth. Visitors expect fast loading pages, smooth navigation, and secure browsing. At Webnion, we provide professional website optimization services to improve your website’s performance, reliability, and user experience."
+        },
+        {
+          "type": "paragraph",
+          "text": "Our optimization process focuses on improving speed, fixing technical issues, strengthening security, and enhancing overall functionality. These improvements help your website rank better in search engines, retain visitors longer, and convert more users into customers."
+        },
+        {
+          "type": "heading",
+          "text": "Performance Optimization"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Website speed improvement",
+            "Code and script optimization",
+            "Image compression and media optimization",
+            "Server and caching optimization",
+            "Database performance tuning"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Technical Improvements"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Fix broken links and errors",
+            "Mobile responsiveness optimization",
+            "Cross-browser compatibility improvements",
+            "SEO-friendly technical structure",
+            "Core Web Vitals optimization"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Security & Stability"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Security vulnerability fixes",
+            "Website backup configuration",
+            "Spam and bot protection",
+            "SSL and secure connection setup",
+            "Monitoring and maintenance recommendations"
+          ]
+        },
+        {
+          "type": "heading",
+          "text": "Why Website Optimization Matters"
+        },
+        {
+          "type": "paragraph",
+          "text": "Optimizing your website not only improves user experience but also increases trust, search visibility, and business conversions. A fast and reliable website helps businesses attract more visitors and retain customers."
+        },
+        {
+          "type": "paragraph",
+          "text": "At Webnion, we analyze your website’s performance and implement improvements that ensure your business website runs smoothly and efficiently."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Website Speed Optimization",
+            "Performance & Code Optimization",
+            "Core Web Vitals Improvement",
+            "Security & Stability Enhancements",
+            "Mobile & User Experience Optimization"
+          ]
+        },
+        {
+          "type": "image",
+          "src": "/images/services/optimization-one.webp"
+        },
+        {
+          "type": "image",
+          "src": "/images/services/optimization-two.webp"
+        }
+      ]
+    },
+    "faqs": {
+      "en": [
+        {
+          "type": "heading",
+          "text": "What is website optimization?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Website optimization is the process of improving website speed, performance, security, and usability to deliver better user experience and higher search engine rankings."
+        },
+        {
+          "type": "heading",
+          "text": "Will optimization improve my website speed?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Yes. Our optimization process includes improving code structure, image compression, caching configuration, and server performance to significantly increase website speed."
+        },
+        {
+          "type": "heading",
+          "text": "Can optimization help SEO?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Yes. Faster loading speed, improved technical structure, and better user experience can positively impact your website’s search engine rankings."
+        },
+        {
+          "type": "heading",
+          "text": "How long does website optimization take?"
+        },
+        {
+          "type": "paragraph",
+          "text": "Depending on the website complexity, optimization usually takes between 1 to 5 days to complete."
+        }
+      ]
+    }
+  }
+}
