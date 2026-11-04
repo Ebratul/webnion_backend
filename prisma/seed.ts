@@ -235,7 +235,7 @@ const pricingPlans = ordered([
     slug: 'enterprise',
     name: t('Enterprise', 'এন্টারপ্রাইজ'),
     tagline: t('For advanced, large-scale platforms', 'উন্নত ও বড় পরিসরের প্ল্যাটফর্মের জন্য'),
-    price: 199,
+    price: 1999,
     features: [
       t('Fully custom with advanced features', 'উন্নত ফিচারসহ সম্পূর্ণ কাস্টম'),
       t('Unlimited pages & deep functionality', 'আনলিমিটেড পেজ ও গভীর ফাংশনালিটি'),

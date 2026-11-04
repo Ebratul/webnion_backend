@@ -33,7 +33,7 @@ site opens in dark mode.
 | --- | --- | --- | --- |
 | 01 | Hero + Primary CTA | Charcoal in dark mode, cream in light mode, one button (client's brief) | i18n |
 | 02 | Client Trust & Logos | Two-row project mosaic, then a simple logo row | API: projects, clients |
-| 03 | Customer Problems | Split layout: heading left, working demo chatbot right (Chatify) | i18n |
+| 03 | Customer Problems | Split layout: heading left, frontend-only demo chatbot right (Chatify) | i18n |
 | 04 | Services & Solutions | Three image cards with CTA and arrow | API: services |
 | 05 | Business Outcomes | Editorial split with staggered images (Expert Insights) | i18n |
 | 06 | Featured Projects & Case Studies | Dark carousel of project cards with pagination dots | API: projects |
@@ -98,7 +98,7 @@ All content comes from webnion.com or the supplied references. Where those disag
 | --- | --- | --- |
 | Client count | The client's brief removes the count from the hero | Not shown |
 | Client logos | GoDaddy, Hotjar, Tripadvisor and Google Fonts appear in the screenshot; the live site shows real client logos | Real client logos |
-| Pricing | The client set four plans | Free $0, Starter $19, Production $199, Enterprise $199. Enterprise was typed as `199#`, to be confirmed |
+| Pricing | The client set four plans | Free $0, Starter $19, Production $199, Enterprise $1,999 |
 | Process, FAQ answers, Bangla copy | Not on the live site | Newly written, needs review |
 
 ## 8. Website pages
