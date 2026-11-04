@@ -32,10 +32,17 @@ src/app/utils        catchAsync, sendResponse, content factories, validators
 
 - Imports use the `.js` extension (NodeNext ESM). The Prisma client is generated to `src/generated/prisma` and is not committed.
 - Translated fields are JSON `{ en, bn }`. Public reads take `?locale=` and return flat strings via `pickText`.
-- Content modules (service, project, testimonial, delivery-story, pricing, faq, team, client) use the factories in
+- Content modules (service, project, case-study, testimonial, delivery-story, pricing, faq, team, client) use the factories in
   `utils/content.ts`. A new content type needs its model, a localizer and a Zod schema.
 - Throw `AppError` for expected failures. Zod and Prisma errors are mapped in `globalErrorHandler`.
 - Input schemas use `z.strictObject`, so unknown fields are rejected rather than written to the database.
+- Never put `.default()` in a schema that is also `.partial()`: it overwrites stored values on PATCH. Let the database supply defaults.
+- Clear a nullable Json column with `nullableJson`. Prisma rejects a plain null there.
+- Uploaded files go to `UPLOAD_DIR` and are served at `/uploads`. The file type comes from its first bytes, never the name.
+
+## Media storage
+
+Uploads go through `module/upload`. With all three `CLOUDINARY_*` keys set they are stored on Cloudinary (`lib/cloudinary.ts`), otherwise in `UPLOAD_DIR`. Setting only some keys stops the API at startup. `upload_large` returns a stream whose `error` event crashes the process if unhandled, so keep the listener.
 
 ## Git
 

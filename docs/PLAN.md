@@ -100,3 +100,22 @@ All content comes from webnion.com or the supplied references. Where those disag
 | Client logos | GoDaddy, Hotjar, Tripadvisor and Google Fonts appear in the screenshot; the live site shows real client logos | Real client logos |
 | Pricing | Reference shows four tiers; the live site has three | The three live plans: $100, $400, $899 |
 | Process, FAQ answers, Bangla copy | Not on the live site | Newly written, needs review |
+
+## 8. Website pages
+
+Added after the homepage, matching the live webnion.com pages in Webnion's fonts and both themes.
+
+| Path | Content |
+| --- | --- |
+| `/service`, `/services/:slug` | Service list and detail pages with questions and answers |
+| `/project`, `/project/:slug` | Portfolio with 12 projects per page, and project details |
+| `/products` | Product catalog with search, filters and sorting |
+| `/case-studies`, `/case-studies/:slug` | 24 case studies, 6 per page, with a category filter |
+| `/admin` | Admin panel for all content, inquiries and users |
+
+Bangla covers page text and titles. Article bodies from the live site are English until translated.
+
+## 9. Media storage
+
+The site runs on a VPS. Review videos and admin uploads live in the backend uploads folder, which is not in git. Cloudinary is
+built in and switches on when its three keys are set in the backend `.env`.
