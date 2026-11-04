@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { mkdirSync } from 'node:fs';
 import { open, rename, rm, stat } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import multer from 'multer';
 import { config } from '../../config/index.js';
@@ -38,12 +39,16 @@ const readHead = async (file: string) => {
   }
 };
 
-mkdirSync(config.uploadDir, { recursive: true });
+// Vercel's disk is read-only apart from a temporary folder that is wiped between requests
+const onVercel = Boolean(process.env.VERCEL);
+const incomingDir = onVercel ? tmpdir() : config.uploadDir;
+
+mkdirSync(incomingDir, { recursive: true });
 
 // Files land under a random name with no extension, and are only named and kept once their content checks out
 export const receiveFile = multer({
   storage: multer.diskStorage({
-    destination: config.uploadDir,
+    destination: incomingDir,
     filename: (_req, _file, done) => done(null, `.incoming-${randomUUID()}`),
   }),
   limits: { fileSize: MAX_VIDEO_SIZE, files: 1 },
@@ -72,6 +77,8 @@ const store = async (tempPath: string) => {
       await rm(tempPath, { force: true });
       return { path: url, kind: type.kind };
     }
+
+    if (onVercel) throw new AppError(503, 'File uploads are off until the Cloudinary keys are set');
 
     const name = `${randomUUID()}.${type.extension}`;
     await rename(tempPath, path.join(config.uploadDir, name));

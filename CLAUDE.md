@@ -44,6 +44,12 @@ src/app/utils        catchAsync, sendResponse, content factories, validators
 
 Uploads go through `module/upload`. With all three `CLOUDINARY_*` keys set they are stored on Cloudinary (`lib/cloudinary.ts`), otherwise in `UPLOAD_DIR`. Setting only some keys stops the API at startup. `upload_large` returns a stream whose `error` event crashes the process if unhandled, so keep the listener.
 
+## Deployment
+
+Hosted on Vercel through `api/index.js` and `vercel.json`, with the database on Neon. See the README. On Vercel the disk is read-only, so
+`module/upload` receives files in the temporary folder and refuses to store them without Cloudinary. Keep `.vercelignore` up to
+date: the CLI does not read `.gitignore`, and an uploaded `.env` would be loaded in production.
+
 ## Git
 
 Commit with the configured `Ebratul` identity. **Never add `Co-Authored-By` trailers or "Generated with" footers**: the

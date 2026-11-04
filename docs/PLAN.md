@@ -117,5 +117,16 @@ Bangla covers page text and titles. Article bodies from the live site are Englis
 
 ## 9. Media storage
 
-The site runs on a VPS. Review videos and admin uploads live in the backend uploads folder, which is not in git. Cloudinary is
-built in and switches on when its three keys are set in the backend `.env`.
+The review videos are compressed copies on Vercel Blob. Admin uploads need Cloudinary, which switches on when its three keys
+are set in the backend's Vercel environment. Until then uploads return a clear error, because Vercel keeps no files on disk.
+
+## 10. Hosting
+
+| Part | Where | Address |
+| --- | --- | --- |
+| Website | Vercel project `webnion-frontend`, region `sin1` | https://webnion-frontend-jade.vercel.app |
+| API | Vercel project `webnion-backend`, region `sin1` | https://webnion-backend.vercel.app |
+| Database | Neon project `webnion`, Singapore | Pooled address in Vercel, direct address for migrations |
+| Review videos | Vercel Blob store `webnion-media` | Saved in `testimonials.videoUrl` |
+
+The `webnion.com` domain still points to the old site. Neither Vercel project is connected to GitHub, so a push does not deploy.

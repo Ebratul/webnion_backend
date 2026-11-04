@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+uploads
+uploads-test-cloudinary
+dist
+coverage
+tests
+docs
+docker-compose.yml
+*.log

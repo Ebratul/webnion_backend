@@ -100,8 +100,9 @@ const projects = ordered([
   project('Gigaloy.com', 'gigaloy', 'gigaloy-website', t('Solution', 'সলিউশন')),
 ]);
 
-// Videos are not in git: copy uploads/reviews to the server when deploying (see README)
-const VIDEO_BASE = '/uploads/reviews';
+// Videos are not in git: copy uploads/reviews to the server when deploying (see README),
+// or set REVIEW_VIDEO_BASE when they are hosted elsewhere
+const VIDEO_BASE = process.env.REVIEW_VIDEO_BASE ?? '/uploads/reviews';
 
 const testimonials = ordered([
   {
