@@ -17,15 +17,15 @@ and no generated-by footer, so Claude never appears as a GitHub contributor.
 
 | Token | Value | Source |
 | --- | --- | --- |
-| Primary orange | `#CF4A14` | client's references, with other colours per section (see `DESIGN.md`) |
+| Brand purple | `#8224E3` | the Webnion logo, for all buttons and accents (see `DESIGN.md`) |
 | Black canvas | `#010101` | sampled from the live hero |
 | Planet rim blue | `#0E59AF` to `#3B82F6` | sampled from the live hero |
 | WhatsApp green | `#25D366` | live floating button only |
 | English font | Poppins | brief |
 | Bangla font | Hind Siliguri | brief |
 
-The client wants each homepage section in the colours of its reference image. Fonts stay Poppins / Hind Siliguri, and the
-site opens in dark mode.
+Section backgrounds follow the reference images, and buttons and accents use the brand purple. Fonts stay Poppins / Hind Siliguri,
+the site opens in dark mode, and it shows at 110% from 768px up.
 
 ## 3. Homepage flow and layout reference
 
@@ -36,12 +36,12 @@ site opens in dark mode.
 | 03 | Customer Problems | Split layout: heading left, frontend-only demo chatbot right (Chatify) | i18n |
 | 04 | Services & Solutions | Three image cards with CTA and arrow | API: services |
 | 05 | Business Outcomes | Editorial split with staggered images (Expert Insights) | i18n |
-| 06 | Featured Projects & Case Studies | Dark carousel of project cards with pagination dots | API: projects |
+| 06 | Featured Projects & Case Studies | Dark carousel of three equal project cards with pagination dots | API: projects |
 | 07 | Video Testimonials | Rating strip and two rows of video / result cards | API: testimonials |
 | 08 | Project Delivery Stories | Bold heading with CTA, photo strip with captions | API: delivery stories |
 | 09 | 3-Step Working Process | Curved line with three numbered steps | i18n |
 | 10 | Pricing & Project Investment | Joined plan columns, Starter plan highlighted | API: pricing |
-| 11 | Team & Expertise | Portrait grid (no reference supplied) | API: team |
+| 11 | Team & Expertise | Removed from the homepage at the client's request. Team members are on `/team` | API: team |
 | 12 | FAQs & Risk Reassurance | Booking card left, accordion right | API: FAQs |
 | 13 | Final Project Inquiry | Centered heading, inquiry form, footer | i18n, POST to API |
 
@@ -130,4 +130,4 @@ are set in the backend's Vercel environment. Until then uploads return a clear e
 | Database | Neon project `webnion`, Singapore | Pooled address in Vercel, direct address for migrations |
 | Review videos | Vercel Blob store `webnion-media` | Saved in `testimonials.videoUrl` |
 
-The `webnion.com` domain still points to the old site. Neither Vercel project is connected to GitHub, so a push does not deploy.
+The `webnion.com` domain still points to the old site. `webnion-frontend` is connected to GitHub, so a push to it deploys the site.
