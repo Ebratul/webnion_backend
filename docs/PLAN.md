@@ -17,15 +17,15 @@ and no generated-by footer, so Claude never appears as a GitHub contributor.
 
 | Token | Value | Source |
 | --- | --- | --- |
-| Primary violet | `#7C3AED` | sampled from the live CTA |
+| Primary orange | `#CF4A14` | client's references, with other colours per section (see `DESIGN.md`) |
 | Black canvas | `#010101` | sampled from the live hero |
 | Planet rim blue | `#0E59AF` to `#3B82F6` | sampled from the live hero |
 | WhatsApp green | `#25D366` | live floating button only |
 | English font | Poppins | brief |
 | Bangla font | Hind Siliguri | brief |
 
-The reference screenshots use orange, blue and serif type from other brands. Layouts are taken from them;
-colour and type always stay Webnion violet with Poppins / Hind Siliguri.
+The client wants each homepage section in the colours of its reference image. Fonts stay Poppins / Hind Siliguri, and the
+site opens in dark mode.
 
 ## 3. Homepage flow and layout reference
 
