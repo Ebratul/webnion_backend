@@ -111,6 +111,7 @@ Added after the homepage, matching the live webnion.com pages in Webnion's fonts
 | `/project`, `/project/:slug` | Portfolio with 12 projects per page, and project details |
 | `/products` | Product catalog with search, filters and sorting |
 | `/case-studies`, `/case-studies/:slug` | 24 case studies, 6 per page, with a category filter |
+| `/team` | Banner and a card for each team member, opened by the Teams menu link |
 | `/admin` | Admin panel for all content, inquiries and users |
 
 Bangla covers page text and titles. Article bodies from the live site are English until translated.
