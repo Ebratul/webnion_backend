@@ -31,8 +31,8 @@ colour and type always stay Webnion violet with Poppins / Hind Siliguri.
 
 | # | Section | Layout reference | Data source |
 | --- | --- | --- | --- |
-| 01 | Hero + Primary CTA | Charcoal background with warm corners, one button, logo row (client's brief) | i18n, API: clients |
-| 02 | Client Work | Two-row project mosaic | API: projects |
+| 01 | Hero + Primary CTA | Charcoal in dark mode, cream in light mode, one button (client's brief) | i18n |
+| 02 | Client Trust & Logos | Two-row project mosaic, then a simple logo row | API: projects, clients |
 | 03 | Customer Problems | Split layout: heading left, chat-style panel right (Chatify) | i18n |
 | 04 | Services & Solutions | Three image cards with CTA and arrow | API: services |
 | 05 | Business Outcomes | Editorial split with staggered images (Expert Insights) | i18n |
