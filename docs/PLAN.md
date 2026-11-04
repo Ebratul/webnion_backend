@@ -40,7 +40,7 @@ site opens in dark mode.
 | 07 | Video Testimonials | Rating strip and two rows of video / result cards | API: testimonials |
 | 08 | Project Delivery Stories | Bold heading with CTA, photo strip with captions | API: delivery stories |
 | 09 | 3-Step Working Process | Curved line with three numbered steps | i18n |
-| 10 | Pricing & Project Investment | Joined plan columns, highlighted middle plan | API: pricing |
+| 10 | Pricing & Project Investment | Joined plan columns, Starter plan highlighted | API: pricing |
 | 11 | Team & Expertise | Portrait grid (no reference supplied) | API: team |
 | 12 | FAQs & Risk Reassurance | Booking card left, accordion right | API: FAQs |
 | 13 | Final Project Inquiry | Centered heading, inquiry form, footer | i18n, POST to API |
@@ -98,7 +98,7 @@ All content comes from webnion.com or the supplied references. Where those disag
 | --- | --- | --- |
 | Client count | The client's brief removes the count from the hero | Not shown |
 | Client logos | GoDaddy, Hotjar, Tripadvisor and Google Fonts appear in the screenshot; the live site shows real client logos | Real client logos |
-| Pricing | Reference shows four tiers; the live site has three | The three live plans: $100, $400, $899 |
+| Pricing | The client set four plans | Free $0, Starter $19, Production $199, Enterprise $199. Enterprise was typed as `199#`, to be confirmed |
 | Process, FAQ answers, Bangla copy | Not on the live site | Newly written, needs review |
 
 ## 8. Website pages

@@ -191,10 +191,24 @@ const deliveryStories = ordered([
 
 const pricingPlans = ordered([
   {
-    slug: 'launch-website',
-    name: t('Launch Website', 'লঞ্চ ওয়েবসাইট'),
+    slug: 'free',
+    name: t('Free', 'ফ্রি'),
+    tagline: t('For businesses planning their next step', 'যেসব ব্যবসা পরবর্তী পদক্ষেপ পরিকল্পনা করছে তাদের জন্য'),
+    price: 0,
+    features: [
+      t('Free 15-minute call', '১৫ মিনিটের ফ্রি কল'),
+      t('Review of your business goals', 'আপনার ব্যবসার লক্ষ্য পর্যালোচনা'),
+      t('Clear plan, scope, and cost', 'স্পষ্ট পরিকল্পনা, পরিধি ও খরচ'),
+      t('No obligation', 'কোনো বাধ্যবাধকতা নেই'),
+    ],
+  },
+  {
+    slug: 'starter',
+    name: t('Starter', 'স্টার্টার'),
     tagline: t('Perfect for startups & small businesses', 'স্টার্টআপ ও ছোট ব্যবসার জন্য উপযুক্ত'),
-    price: 100,
+    badge: t('Best Value', 'সেরা ভ্যালু'),
+    price: 19,
+    isFeatured: true,
     features: [
       t('Custom website design', 'কাস্টম ওয়েবসাইট ডিজাইন'),
       t('Up to 10 responsive pages', 'সর্বোচ্চ ১০টি রেসপন্সিভ পেজ'),
@@ -204,12 +218,10 @@ const pricingPlans = ordered([
     ],
   },
   {
-    slug: 'growth-website',
-    name: t('Growth Website', 'গ্রোথ ওয়েবসাইট'),
+    slug: 'production',
+    name: t('Production', 'প্রোডাকশন'),
     tagline: t('For scaling brands with performance', 'পারফরম্যান্স নিয়ে এগিয়ে যেতে চাওয়া ব্র্যান্ডের জন্য'),
-    badge: t('Best Value', 'সেরা ভ্যালু'),
-    price: 400,
-    isFeatured: true,
+    price: 199,
     features: [
       t('Conversion-focused UX design', 'কনভার্সন-কেন্দ্রিক UX ডিজাইন'),
       t('Up to 25 responsive pages', 'সর্বোচ্চ ২৫টি রেসপন্সিভ পেজ'),
@@ -219,10 +231,10 @@ const pricingPlans = ordered([
     ],
   },
   {
-    slug: 'enterprise-custom',
-    name: t('Enterprise Custom', 'এন্টারপ্রাইজ কাস্টম'),
+    slug: 'enterprise',
+    name: t('Enterprise', 'এন্টারপ্রাইজ'),
     tagline: t('For advanced, large-scale platforms', 'উন্নত ও বড় পরিসরের প্ল্যাটফর্মের জন্য'),
-    price: 899,
+    price: 199,
     features: [
       t('Fully custom with advanced features', 'উন্নত ফিচারসহ সম্পূর্ণ কাস্টম'),
       t('Unlimited pages & deep functionality', 'আনলিমিটেড পেজ ও গভীর ফাংশনালিটি'),
@@ -244,8 +256,8 @@ const faqs = ordered([
   {
     question: t('Do you work with small businesses and startups?', 'আপনারা কি ছোট ব্যবসা ও স্টার্টআপের সাথে কাজ করেন?'),
     answer: t(
-      'Yes. The Launch Website package is built for startups and small businesses, and you can move to a larger package as your business grows.',
-      'হ্যাঁ। লঞ্চ ওয়েবসাইট প্যাকেজটি স্টার্টআপ ও ছোট ব্যবসার জন্যই তৈরি, আর ব্যবসা বড় হলে আপনি বড় প্যাকেজে যেতে পারবেন।',
+      'Yes. The Starter plan is built for startups and small businesses, and you can move to a larger plan as your business grows.',
+      'হ্যাঁ। স্টার্টার প্ল্যানটি স্টার্টআপ ও ছোট ব্যবসার জন্যই তৈরি, আর ব্যবসা বড় হলে আপনি বড় প্ল্যানে যেতে পারবেন।',
     ),
   },
   {
@@ -272,8 +284,8 @@ const faqs = ordered([
   {
     question: t('What happens after my website goes live?', 'ওয়েবসাইট লাইভ হওয়ার পর কী হবে?'),
     answer: t(
-      'Every package includes post-launch support: 30 days on Launch, 120 days on Growth, and 200 days on Enterprise Custom.',
-      'প্রতিটি প্যাকেজে লঞ্চের পর সাপোর্ট আছে: লঞ্চে ৩০ দিন, গ্রোথে ১২০ দিন এবং এন্টারপ্রাইজ কাস্টমে ২০০ দিন।',
+      'Every paid plan includes post-launch support: 30 days on Starter, 120 days on Production, and 200 days on Enterprise.',
+      'প্রতিটি পেইড প্ল্যানে লঞ্চের পর সাপোর্ট আছে: স্টার্টারে ৩০ দিন, প্রোডাকশনে ১২০ দিন এবং এন্টারপ্রাইজে ২০০ দিন।',
     ),
   },
 ]);
