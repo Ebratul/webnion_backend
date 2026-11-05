@@ -166,7 +166,7 @@ describe('content', () => {
   it('serves the aggregated homepage payload', async () => {
     const res = await request(app).get(`${API}/home?locale=bn`).expect(200);
     expect(Object.keys(res.body.data).sort()).toEqual(
-      ['caseStudies', 'clients', 'deliveryStories', 'faqs', 'pricingPlans', 'projects', 'services', 'team', 'testimonials'].sort(),
+      ['caseStudies', 'clients', 'deliveryStories', 'faqs', 'outcomeCards', 'pricingPlans', 'projects', 'services', 'team', 'testimonials'].sort(),
     );
   });
 });
@@ -284,6 +284,45 @@ describe('admin editing', () => {
       .send({ budget: null, content: null })
       .expect(200);
     expect(res.body.data).toMatchObject({ budget: null, content: null });
+  });
+});
+
+describe('outcome cards', () => {
+  const card = {
+    title: { en: 'Get More Customers', bn: 'আরও গ্রাহক পান' },
+    description: { en: 'Turn visitors into sales.', bn: 'ভিজিটরকে বিক্রিতে রূপান্তর করুন।' },
+    points: [{ en: 'Reach the right audience', bn: 'সঠিক গ্রাহকের কাছে পৌঁছান' }],
+    image: '/images/outcome-cards/get-more-customers.webp',
+    buttonLabel: { en: 'Talk To Us', bn: 'কথা বলুন' },
+    buttonUrl: '#contact',
+  };
+
+  it('lets an admin set the text, image and button, and serves them by language', async () => {
+    const token = await loginAs();
+    const created = await request(app).post(`${API}/outcome-cards`).set('Authorization', `Bearer ${token}`).send(card).expect(201);
+
+    const list = await request(app).get(`${API}/outcome-cards?locale=bn`).expect(200);
+    const found = list.body.data.find((row: { id: string }) => row.id === created.body.data.id);
+    expect(found).toMatchObject({ title: 'আরও গ্রাহক পান', points: ['সঠিক গ্রাহকের কাছে পৌঁছান'], buttonLabel: 'কথা বলুন', buttonUrl: '#contact', eyebrow: null });
+
+    await request(app).delete(`${API}/outcome-cards/${created.body.data.id}`).set('Authorization', `Bearer ${token}`).expect(200);
+  });
+
+  it('clears the button when an admin empties it', async () => {
+    const token = await loginAs();
+    const created = await request(app).post(`${API}/outcome-cards`).set('Authorization', `Bearer ${token}`).send(card).expect(201);
+    const updated = await request(app).patch(`${API}/outcome-cards/${created.body.data.id}`).set('Authorization', `Bearer ${token}`).send({ buttonLabel: null, buttonUrl: null }).expect(200);
+    expect(updated.body.data).toMatchObject({ buttonLabel: null, buttonUrl: null });
+    await request(app).delete(`${API}/outcome-cards/${created.body.data.id}`).set('Authorization', `Bearer ${token}`).expect(200);
+  });
+
+  it.each(['javascript:alert(1)', '//evil.example', 'contact'])('refuses the button link %s', async (buttonUrl) => {
+    const token = await loginAs();
+    await request(app).post(`${API}/outcome-cards`).set('Authorization', `Bearer ${token}`).send({ ...card, buttonUrl }).expect(400);
+  });
+
+  it('needs a login to change cards', async () => {
+    await request(app).post(`${API}/outcome-cards`).send(card).expect(401);
   });
 });
 

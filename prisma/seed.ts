@@ -167,6 +167,79 @@ const testimonials = ordered([
   },
 ]);
 
+const consultationButton = { en: 'Book A Free Consultation', bn: 'ফ্রি পরামর্শ বুক করুন' };
+
+const outcomeCards = ordered([
+  {
+    eyebrow: { en: 'Growth', bn: 'প্রবৃদ্ধি' },
+    title: { en: 'Get More Customers', bn: 'আরও গ্রাহক পান' },
+    description: {
+      en: 'Turn more visitors into real inquiries, bookings, and sales with a conversion-focused website built around your customers and business goals.',
+      bn: 'আপনার গ্রাহক ও ব্যবসার লক্ষ্য মাথায় রেখে তৈরি কনভার্সন-কেন্দ্রিক ওয়েবসাইটের মাধ্যমে আরও ভিজিটরকে সত্যিকারের ইনকোয়ারি, বুকিং ও বিক্রিতে রূপান্তর করুন।',
+    },
+    points: [
+      { en: 'Reach the right audience', bn: 'সঠিক গ্রাহকের কাছে পৌঁছান' },
+      { en: 'Generate qualified leads', bn: 'মানসম্মত লিড তৈরি করুন' },
+      { en: 'Increase inquiries and bookings', bn: 'ইনকোয়ারি ও বুকিং বাড়ান' },
+      { en: 'Convert more visitors into customers', bn: 'আরও ভিজিটরকে গ্রাহকে পরিণত করুন' },
+    ],
+    image: '/images/outcome-cards/get-more-customers.webp',
+    buttonLabel: consultationButton,
+    buttonUrl: '#contact',
+  },
+  {
+    eyebrow: { en: 'Trust', bn: 'আস্থা' },
+    title: { en: 'Build Customer Trust', bn: 'গ্রাহকের আস্থা গড়ুন' },
+    description: {
+      en: 'Create a strong and professional online presence that gives customers the confidence to choose your business over competitors.',
+      bn: 'একটি শক্তিশালী ও পেশাদার অনলাইন উপস্থিতি গড়ে তুলুন, যা দেখে গ্রাহক প্রতিযোগীদের বদলে আপনার ব্যবসাকেই বেছে নিতে ভরসা পান।',
+    },
+    points: [
+      { en: 'Present a professional brand', bn: 'পেশাদার ব্র্যান্ড হিসেবে নিজেকে তুলে ধরুন' },
+      { en: 'Showcase services clearly', bn: 'সার্ভিসগুলো পরিষ্কারভাবে দেখান' },
+      { en: 'Build credibility with real proof', bn: 'বাস্তব প্রমাণ দিয়ে বিশ্বাসযোগ্যতা গড়ুন' },
+      { en: 'Create a consistent customer experience', bn: 'গ্রাহককে একই মানের অভিজ্ঞতা দিন' },
+    ],
+    image: '/images/outcome-cards/build-customer-trust.webp',
+    buttonLabel: consultationButton,
+    buttonUrl: '#contact',
+  },
+  {
+    eyebrow: { en: 'Automation', bn: 'অটোমেশন' },
+    title: { en: 'Manage Work Smarter', bn: 'স্মার্টভাবে কাজ সামলান' },
+    description: {
+      en: 'Reduce repetitive manual work by connecting customer inquiries, bookings, sales, and daily operations through one organized digital system.',
+      bn: 'গ্রাহকের ইনকোয়ারি, বুকিং, বিক্রি ও দৈনন্দিন কাজ একটি গোছানো ডিজিটাল সিস্টেমে যুক্ত করে বারবার করা হাতের কাজ কমান।',
+    },
+    points: [
+      { en: 'Automate repetitive tasks', bn: 'বারবার করা কাজ অটোমেট করুন' },
+      { en: 'Manage leads and inquiries', bn: 'লিড ও ইনকোয়ারি সামলান' },
+      { en: 'Organize business information', bn: 'ব্যবসার তথ্য গুছিয়ে রাখুন' },
+      { en: 'Save time for important work', bn: 'জরুরি কাজের জন্য সময় বাঁচান' },
+    ],
+    image: '/images/outcome-cards/manage-work-smarter.webp',
+    buttonLabel: consultationButton,
+    buttonUrl: '#contact',
+  },
+  {
+    eyebrow: { en: 'Analytics', bn: 'অ্যানালিটিক্স' },
+    title: { en: 'Track and Improve Sales', bn: 'বিক্রি ট্র্যাক করুন ও বাড়ান' },
+    description: {
+      en: 'Understand what brings customers to your business, which campaigns generate results, and where you can improve your sales process.',
+      bn: 'কী দেখে গ্রাহক আপনার কাছে আসছেন, কোন ক্যাম্পেইন ফল দিচ্ছে এবং বিক্রির প্রক্রিয়ায় কোথায় উন্নতি করা যায়, তা বুঝে নিন।',
+    },
+    points: [
+      { en: 'Track customer actions', bn: 'গ্রাহকের কার্যক্রম ট্র্যাক করুন' },
+      { en: 'Measure marketing performance', bn: 'মার্কেটিংয়ের ফলাফল মাপুন' },
+      { en: 'Identify growth opportunities', bn: 'প্রবৃদ্ধির সুযোগ খুঁজে নিন' },
+      { en: 'Make decisions with real data', bn: 'বাস্তব তথ্য দেখে সিদ্ধান্ত নিন' },
+    ],
+    image: '/images/outcome-cards/track-and-improve-sales.webp',
+    buttonLabel: consultationButton,
+    buttonUrl: '#contact',
+  },
+]);
+
 const deliveryStories = ordered([
   {
     title: t('Project Agreement', 'প্রজেক্ট চুক্তি'),
@@ -396,6 +469,7 @@ const main = async () => {
   await seedIfEmpty('case studies', () => prisma.caseStudy.count(), () => prisma.caseStudy.createMany({ data: ordered(caseStudies) }));
   await seedIfEmpty('testimonials', () => prisma.testimonial.count(), () => prisma.testimonial.createMany({ data: testimonials }));
   await seedIfEmpty('delivery stories', () => prisma.deliveryStory.count(), () => prisma.deliveryStory.createMany({ data: deliveryStories }));
+  await seedIfEmpty('outcome cards', () => prisma.outcomeCard.count(), () => prisma.outcomeCard.createMany({ data: outcomeCards }));
   await seedIfEmpty('pricing plans', () => prisma.pricingPlan.count(), () => prisma.pricingPlan.createMany({ data: pricingPlans }));
   await seedIfEmpty('FAQs', () => prisma.faq.count(), () => prisma.faq.createMany({ data: faqs }));
   await seedIfEmpty('team', () => prisma.teamMember.count(), () => prisma.teamMember.createMany({ data: team }));

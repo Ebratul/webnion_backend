@@ -37,10 +37,11 @@ the site opens in dark mode, and it shows at 110% from 768px up.
 | 04 | Services & Solutions | Three image cards with one full-width button, border on hover only | API: services |
 | 05 | Business Outcomes | Rounded card on the page edges, using the Expert Insights reference and its text | i18n |
 | 06 | Featured Projects | Dark carousel of three equal project cards, one card every 2 seconds, with a counter and progress line. Case studies stay on `/case-studies` | API: projects |
+| 06b | Outcome Cards | Four stacking cards with text, points, image and button, managed from the admin panel | API: outcome cards |
 | 07 | Video Testimonials | Rating strip and two rows of video / result cards | API: testimonials |
 | 08 | Project Delivery Stories | Bold heading with CTA, numbered photo cards with scroll motion | API: delivery stories |
 | 09 | 3-Step Working Process | Curved line with three numbered steps | i18n |
-| 10 | Pricing & Project Investment | Separate plan cards with one gap, Starter plan highlighted from outside | API: pricing |
+| 10 | Pricing & Project Investment | Separate plan cards with one gap and matching rows, Starter plan highlighted from outside | API: pricing |
 | 11 | Team & Expertise | Removed from the homepage at the client's request. Team members are on `/team` | API: team |
 | 12 | FAQs & Risk Reassurance | Booking card left, accordion right | API: FAQs |
 | 13 | Final Project Inquiry | Centered heading, inquiry form, footer | i18n, POST to API |
@@ -51,7 +52,7 @@ Structure follows the supplied example: `src/app/{config,interfaces,lib,middlewa
 `src/app.ts`, `src/server.ts`. Each module has `*.router.ts`, `*.controller.ts`, `*.service.ts`, `*.interface.ts`,
 `*.validation.ts`.
 
-**Modules:** auth, user, service, project, testimonial, delivery-story, pricing, faq, team, client, inquiry, home.
+**Modules:** auth, user, service, project, testimonial, delivery-story, outcome-card, pricing, faq, team, client, inquiry, home.
 
 **Content model:** translatable fields are JSON `{ "en": "...", "bn": "..." }`. Public endpoints take `?locale=` and
 return flattened strings.

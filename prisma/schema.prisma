@@ -152,6 +152,24 @@ model DeliveryStory {
   @@map("delivery_stories")
 }
 
+model OutcomeCard {
+  id          String   @id @default(uuid())
+  eyebrow     Json?
+  title       Json
+  description Json
+  points      Json
+  image       String
+  buttonLabel Json?
+  buttonUrl   String?
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("outcome_cards")
+}
+
 model PricingPlan {
   id         String   @id @default(uuid())
   slug       String   @unique

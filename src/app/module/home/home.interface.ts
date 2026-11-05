@@ -2,6 +2,7 @@ import type { PublicCaseStudy } from '../case-study/case-study.interface.js';
 import type { PublicClient } from '../client/client.interface.js';
 import type { PublicDeliveryStory } from '../delivery-story/delivery-story.interface.js';
 import type { PublicFaq } from '../faq/faq.interface.js';
+import type { PublicOutcomeCard } from '../outcome-card/outcome-card.interface.js';
 import type { PublicPricing } from '../pricing/pricing.interface.js';
 import type { PublicProject } from '../project/project.interface.js';
 import type { PublicService } from '../service/service.interface.js';
@@ -14,6 +15,7 @@ export interface HomePayload {
   caseStudies: PublicCaseStudy[];
   testimonials: PublicTestimonial[];
   deliveryStories: PublicDeliveryStory[];
+  outcomeCards: PublicOutcomeCard[];
   pricingPlans: PublicPricing[];
   faqs: PublicFaq[];
   team: PublicTeam[];

@@ -32,7 +32,7 @@ src/app/utils        catchAsync, sendResponse, content factories, validators
 
 - Imports use the `.js` extension (NodeNext ESM). The Prisma client is generated to `src/generated/prisma` and is not committed.
 - Translated fields are JSON `{ en, bn }`. Public reads take `?locale=` and return flat strings via `pickText`.
-- Content modules (service, project, case-study, testimonial, delivery-story, pricing, faq, team, client) use the factories in
+- Content modules (service, project, case-study, testimonial, delivery-story, outcome-card, pricing, faq, team, client) use the factories in
   `utils/content.ts`. A new content type needs its model, a localizer and a Zod schema.
 - Throw `AppError` for expected failures. Zod and Prisma errors are mapped in `globalErrorHandler`.
 - Input schemas use `z.strictObject`, so unknown fields are rejected rather than written to the database.
