@@ -40,7 +40,7 @@ the site opens in dark mode, and it shows at 110% from 768px up.
 | 07 | Video Testimonials | Rating strip and two rows of video / result cards | API: testimonials |
 | 08 | Project Delivery Stories | Bold heading with CTA, numbered photo cards with scroll motion | API: delivery stories |
 | 09 | 3-Step Working Process | Curved line with three numbered steps | i18n |
-| 10 | Pricing & Project Investment | Joined plan columns, Starter plan highlighted | API: pricing |
+| 10 | Pricing & Project Investment | Separate plan cards with one gap, Starter plan highlighted from outside | API: pricing |
 | 11 | Team & Expertise | Removed from the homepage at the client's request. Team members are on `/team` | API: team |
 | 12 | FAQs & Risk Reassurance | Booking card left, accordion right | API: FAQs |
 | 13 | Final Project Inquiry | Centered heading, inquiry form, footer | i18n, POST to API |
