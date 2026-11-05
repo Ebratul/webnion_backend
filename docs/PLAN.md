@@ -32,13 +32,13 @@ the site opens in dark mode, and it shows at 110% from 768px up.
 | # | Section | Layout reference | Data source |
 | --- | --- | --- | --- |
 | 01 | Hero + Primary CTA | Charcoal in dark mode, cream in light mode, one button (client's brief) | i18n |
-| 02 | Client Trust & Logos | Two-row project mosaic, then a simple logo row | API: projects, clients |
-| 03 | Customer Problems | Split layout: heading left, frontend-only demo chatbot right (Chatify) | i18n |
-| 04 | Services & Solutions | Three image cards with CTA and arrow | API: services |
-| 05 | Business Outcomes | Editorial split with staggered images (Expert Insights) | i18n |
-| 06 | Featured Projects & Case Studies | Dark carousel of three equal project cards with pagination dots | API: projects |
+| 02 | Client Trust & Logos | Two-row project mosaic, then client logos on white tiles moving right to left | API: projects, clients |
+| 03 | Customer Problems | Split layout: heading left, frontend-only demo chatbot in one scrolling card right | i18n |
+| 04 | Services & Solutions | Three image cards with one full-width button, border on hover only | API: services |
+| 05 | Business Outcomes | Rounded card on the page edges, using the Expert Insights reference and its text | i18n |
+| 06 | Featured Projects | Dark carousel of three equal project cards, one card every 2 seconds, with a counter and progress line. Case studies stay on `/case-studies` | API: projects |
 | 07 | Video Testimonials | Rating strip and two rows of video / result cards | API: testimonials |
-| 08 | Project Delivery Stories | Bold heading with CTA, photo strip with captions | API: delivery stories |
+| 08 | Project Delivery Stories | Bold heading with CTA, numbered photo cards with scroll motion | API: delivery stories |
 | 09 | 3-Step Working Process | Curved line with three numbered steps | i18n |
 | 10 | Pricing & Project Investment | Joined plan columns, Starter plan highlighted | API: pricing |
 | 11 | Team & Expertise | Removed from the homepage at the client's request. Team members are on `/team` | API: team |
