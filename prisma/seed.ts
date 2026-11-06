@@ -263,8 +263,6 @@ const deliveryStories = ordered([
   },
 ]);
 
-const heroBackgrounds = ordered([{ name: 'Wall of client websites', image: '/images/hero/work-wall.webp' }]);
-
 const pricingPlans = ordered([
   {
     slug: 'free',
@@ -477,7 +475,6 @@ const main = async () => {
   await seedIfEmpty('testimonials', () => prisma.testimonial.count(), () => prisma.testimonial.createMany({ data: testimonials }));
   await seedIfEmpty('delivery stories', () => prisma.deliveryStory.count(), () => prisma.deliveryStory.createMany({ data: deliveryStories }));
   await seedIfEmpty('outcome cards', () => prisma.outcomeCard.count(), () => prisma.outcomeCard.createMany({ data: outcomeCards }));
-  await seedIfEmpty('hero backgrounds', () => prisma.heroBackground.count(), () => prisma.heroBackground.createMany({ data: heroBackgrounds }));
   await seedIfEmpty('pricing plans', () => prisma.pricingPlan.count(), () => prisma.pricingPlan.createMany({ data: pricingPlans }));
   await seedIfEmpty('FAQs', () => prisma.faq.count(), () => prisma.faq.createMany({ data: faqs }));
   await seedIfEmpty('team', () => prisma.teamMember.count(), () => prisma.teamMember.createMany({ data: team }));
