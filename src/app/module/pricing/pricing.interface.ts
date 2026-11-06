@@ -7,5 +7,8 @@ export interface PublicPricing {
   price: number;
   currency: string;
   features: string[];
+  priceLabel: string | null;
+  buttonLabel: string | null;
+  note: string | null;
   isFeatured: boolean;
 }

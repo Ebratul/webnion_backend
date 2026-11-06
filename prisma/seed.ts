@@ -263,6 +263,8 @@ const deliveryStories = ordered([
   },
 ]);
 
+const heroBackgrounds = ordered([{ name: 'Wall of client websites', image: '/images/hero/work-wall.webp' }]);
+
 const pricingPlans = ordered([
   {
     slug: 'free',
@@ -282,6 +284,7 @@ const pricingPlans = ordered([
     tagline: t('Perfect for startups & small businesses', 'স্টার্টআপ ও ছোট ব্যবসার জন্য উপযুক্ত'),
     badge: t('Best Value', 'সেরা ভ্যালু'),
     price: 19,
+    priceLabel: t('Starting', 'থেকে শুরু'),
     isFeatured: true,
     features: [
       t('Custom website design', 'কাস্টম ওয়েবসাইট ডিজাইন'),
@@ -296,6 +299,9 @@ const pricingPlans = ordered([
     name: t('Production', 'প্রোডাকশন'),
     tagline: t('For scaling brands with performance', 'পারফরম্যান্স নিয়ে এগিয়ে যেতে চাওয়া ব্র্যান্ডের জন্য'),
     price: 199,
+    priceLabel: t('Starting', 'থেকে শুরু'),
+    // The owner keeps three plans on the site. This one stays in the admin panel, hidden, in case it comes back.
+    isActive: false,
     features: [
       t('Conversion-focused UX design', 'কনভার্সন-কেন্দ্রিক UX ডিজাইন'),
       t('Up to 25 responsive pages', 'সর্বোচ্চ ২৫টি রেসপন্সিভ পেজ'),
@@ -309,6 +315,7 @@ const pricingPlans = ordered([
     name: t('Enterprise', 'এন্টারপ্রাইজ'),
     tagline: t('For advanced, large-scale platforms', 'উন্নত ও বড় পরিসরের প্ল্যাটফর্মের জন্য'),
     price: 1999,
+    priceLabel: t('Starting', 'থেকে শুরু'),
     features: [
       t('Fully custom with advanced features', 'উন্নত ফিচারসহ সম্পূর্ণ কাস্টম'),
       t('Unlimited pages & deep functionality', 'আনলিমিটেড পেজ ও গভীর ফাংশনালিটি'),
@@ -470,6 +477,7 @@ const main = async () => {
   await seedIfEmpty('testimonials', () => prisma.testimonial.count(), () => prisma.testimonial.createMany({ data: testimonials }));
   await seedIfEmpty('delivery stories', () => prisma.deliveryStory.count(), () => prisma.deliveryStory.createMany({ data: deliveryStories }));
   await seedIfEmpty('outcome cards', () => prisma.outcomeCard.count(), () => prisma.outcomeCard.createMany({ data: outcomeCards }));
+  await seedIfEmpty('hero backgrounds', () => prisma.heroBackground.count(), () => prisma.heroBackground.createMany({ data: heroBackgrounds }));
   await seedIfEmpty('pricing plans', () => prisma.pricingPlan.count(), () => prisma.pricingPlan.createMany({ data: pricingPlans }));
   await seedIfEmpty('FAQs', () => prisma.faq.count(), () => prisma.faq.createMany({ data: faqs }));
   await seedIfEmpty('team', () => prisma.teamMember.count(), () => prisma.teamMember.createMany({ data: team }));

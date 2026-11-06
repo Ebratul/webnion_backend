@@ -170,6 +170,20 @@ model OutcomeCard {
   @@map("outcome_cards")
 }
 
+// Background images for the homepage hero. The first visible one is shown.
+model HeroBackground {
+  id        String   @id @default(uuid())
+  name      String
+  image     String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("hero_backgrounds")
+}
+
 model PricingPlan {
   id         String   @id @default(uuid())
   slug       String   @unique
@@ -179,6 +193,10 @@ model PricingPlan {
   price      Int
   currency   String   @default("USD")
   features   Json
+  // Optional words beside the price (Starting, /month), on the button, and a small note at the bottom of the card
+  priceLabel  Json?
+  buttonLabel Json?
+  note        Json?
   isFeatured Boolean  @default(false)
   sortOrder  Int      @default(0)
   isActive   Boolean  @default(true)

@@ -9,6 +9,9 @@ const createPricing = z.strictObject({
   price: z.number().int().min(0),
   currency: z.string().trim().length(3).toUpperCase().optional(),
   features: z.array(localizedTextSchema).min(1).max(30),
+  priceLabel: nullableJson(localizedTextSchema),
+  buttonLabel: nullableJson(localizedTextSchema),
+  note: nullableJson(localizedTextSchema),
   isFeatured: z.boolean().optional(),
   ...sortFields,
 });

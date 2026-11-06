@@ -10,6 +10,8 @@ import type { PublicTeam } from '../team/team.interface.js';
 import type { PublicTestimonial } from '../testimonial/testimonial.interface.js';
 
 export interface HomePayload {
+  // The first visible hero background, or null to show the plain hero
+  heroBackground: string | null;
   services: PublicService[];
   projects: PublicProject[];
   caseStudies: PublicCaseStudy[];

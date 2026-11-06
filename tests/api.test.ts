@@ -166,7 +166,7 @@ describe('content', () => {
   it('serves the aggregated homepage payload', async () => {
     const res = await request(app).get(`${API}/home?locale=bn`).expect(200);
     expect(Object.keys(res.body.data).sort()).toEqual(
-      ['caseStudies', 'clients', 'deliveryStories', 'faqs', 'outcomeCards', 'pricingPlans', 'projects', 'services', 'team', 'testimonials'].sort(),
+      ['caseStudies', 'clients', 'deliveryStories', 'faqs', 'heroBackground', 'outcomeCards', 'pricingPlans', 'projects', 'services', 'team', 'testimonials'].sort(),
     );
   });
 });
@@ -284,6 +284,49 @@ describe('admin editing', () => {
       .send({ budget: null, content: null })
       .expect(200);
     expect(res.body.data).toMatchObject({ budget: null, content: null });
+  });
+});
+
+describe('hero backgrounds', () => {
+  it('shows the first visible background on the homepage and skips hidden ones', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    const hidden = await request(app).post(`${API}/hero-backgrounds`).set('Authorization', token).send({ name: 'Hidden', image: '/images/hero/hidden.webp', isActive: false }).expect(201);
+
+    const visible = await request(app).get(`${API}/hero-backgrounds?locale=en`).expect(200);
+    const home = await request(app).get(`${API}/home?locale=en`).expect(200);
+    expect(visible.body.data.map((row: { image: string }) => row.image)).not.toContain('/images/hero/hidden.webp');
+    expect(home.body.data.heroBackground).toBe(visible.body.data[0]?.image ?? null);
+
+    await request(app).delete(`${API}/hero-backgrounds/${hidden.body.data.id}`).set('Authorization', token).expect(200);
+  });
+
+  it('needs a login to add one and refuses an unsafe image address', async () => {
+    await request(app).post(`${API}/hero-backgrounds`).send({ name: 'Test', image: '/images/hero/test.webp' }).expect(401);
+    const token = `Bearer ${await loginAs()}`;
+    await request(app).post(`${API}/hero-backgrounds`).set('Authorization', token).send({ name: 'Test', image: 'javascript:alert(1)' }).expect(400);
+  });
+});
+
+describe('pricing plan labels', () => {
+  it('serves the price label, button text and note by language, and clears them', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    const plan = {
+      slug: 'test-plan-labels',
+      name: { en: 'Test', bn: 'টেস্ট' },
+      tagline: { en: 'Tagline', bn: 'ট্যাগলাইন' },
+      price: 49,
+      features: [{ en: 'One', bn: 'এক' }],
+      priceLabel: { en: 'One-time', bn: 'এককালীন' },
+      buttonLabel: { en: 'Start Now', bn: 'শুরু করুন' },
+      note: { en: 'Hosting not included.', bn: 'হোস্টিং অন্তর্ভুক্ত নয়।' },
+    };
+    const created = await request(app).post(`${API}/pricing-plans`).set('Authorization', token).send(plan).expect(201);
+    const list = await request(app).get(`${API}/pricing-plans?locale=bn`).expect(200);
+    expect(list.body.data.find((row: { id: string }) => row.id === created.body.data.id)).toMatchObject({ priceLabel: 'এককালীন', buttonLabel: 'শুরু করুন', note: 'হোস্টিং অন্তর্ভুক্ত নয়।' });
+
+    const cleared = await request(app).patch(`${API}/pricing-plans/${created.body.data.id}`).set('Authorization', token).send({ priceLabel: null, buttonLabel: null, note: null }).expect(200);
+    expect(cleared.body.data).toMatchObject({ priceLabel: null, buttonLabel: null, note: null });
+    await request(app).delete(`${API}/pricing-plans/${created.body.data.id}`).set('Authorization', token).expect(200);
   });
 });
 

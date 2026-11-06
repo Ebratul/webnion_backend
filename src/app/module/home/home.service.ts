@@ -3,6 +3,7 @@ import { CaseStudyService } from '../case-study/case-study.service.js';
 import { ClientService } from '../client/client.service.js';
 import { DeliveryStoryService } from '../delivery-story/delivery-story.service.js';
 import { FaqService } from '../faq/faq.service.js';
+import { HeroBackgroundService } from '../hero-background/hero-background.service.js';
 import { OutcomeCardService } from '../outcome-card/outcome-card.service.js';
 import { PricingService } from '../pricing/pricing.service.js';
 import { ProjectService } from '../project/project.service.js';
@@ -12,7 +13,8 @@ import { TestimonialService } from '../testimonial/testimonial.service.js';
 import type { HomePayload } from './home.interface.js';
 
 const getHome = async (locale: Locale): Promise<HomePayload> => {
-  const [services, projects, caseStudies, testimonials, deliveryStories, outcomeCards, pricingPlans, faqs, team, clients] = await Promise.all([
+  const [heroBackgrounds, services, projects, caseStudies, testimonials, deliveryStories, outcomeCards, pricingPlans, faqs, team, clients] = await Promise.all([
+    HeroBackgroundService.listPublic(locale),
     ServiceService.listPublic(locale),
     ProjectService.listPublic(locale),
     CaseStudyService.listPublic(locale),
@@ -25,7 +27,7 @@ const getHome = async (locale: Locale): Promise<HomePayload> => {
     ClientService.listPublic(locale),
   ]);
 
-  return { services, projects, caseStudies, testimonials, deliveryStories, outcomeCards, pricingPlans, faqs, team, clients };
+  return { heroBackground: heroBackgrounds[0]?.image ?? null, services, projects, caseStudies, testimonials, deliveryStories, outcomeCards, pricingPlans, faqs, team, clients };
 };
 
 export const HomeService = { getHome };
