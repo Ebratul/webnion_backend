@@ -9,11 +9,13 @@ import { PricingService } from '../pricing/pricing.service.js';
 import { ProjectService } from '../project/project.service.js';
 import { ServiceService } from '../service/service.service.js';
 import { TeamService } from '../team/team.service.js';
+import { TechnologyService } from '../technology/technology.service.js';
 import { TestimonialService } from '../testimonial/testimonial.service.js';
 import type { HomePayload } from './home.interface.js';
 
 const getHome = async (locale: Locale): Promise<HomePayload> => {
-  const [heroBackgrounds, services, projects, caseStudies, testimonials, deliveryStories, outcomeCards, pricingPlans, faqs, team, clients] = await Promise.all([
+  const [technologies, heroBackgrounds, services, projects, caseStudies, testimonials, deliveryStories, outcomeCards, pricingPlans, faqs, team, clients] = await Promise.all([
+    TechnologyService.listPublic(locale),
     HeroBackgroundService.listPublic(locale),
     ServiceService.listPublic(locale),
     ProjectService.listPublic(locale),
@@ -27,7 +29,7 @@ const getHome = async (locale: Locale): Promise<HomePayload> => {
     ClientService.listPublic(locale),
   ]);
 
-  return { heroBackground: heroBackgrounds[0]?.image ?? null, services, projects, caseStudies, testimonials, deliveryStories, outcomeCards, pricingPlans, faqs, team, clients };
+  return { technologies, heroBackground: heroBackgrounds[0]?.image ?? null, services, projects, caseStudies, testimonials, deliveryStories, outcomeCards, pricingPlans, faqs, team, clients };
 };
 
 export const HomeService = { getHome };

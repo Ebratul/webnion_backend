@@ -1,0 +1,98 @@
+[
+  {
+    "name": "Laravel",
+    "logo": "/images/tech/laravel.webp",
+    "description": {
+      "en": "Powerful PHP framework for building secure and scalable web applications.",
+      "bn": "নিরাপদ ও স্কেলযোগ্য ওয়েব অ্যাপ্লিকেশন তৈরির শক্তিশালী PHP ফ্রেমওয়ার্ক।"
+    }
+  },
+  {
+    "name": "React.js",
+    "logo": "/images/tech/react.webp",
+    "description": {
+      "en": "Modern JavaScript library for creating fast and interactive user interfaces.",
+      "bn": "দ্রুত ও ইন্টারঅ্যাকটিভ ইউজার ইন্টারফেস তৈরির আধুনিক JavaScript লাইব্রেরি।"
+    }
+  },
+  {
+    "name": "Next.js",
+    "logo": "/images/tech/nextjs.webp",
+    "description": {
+      "en": "High-performance React framework for SEO-friendly and scalable websites.",
+      "bn": "SEO-বান্ধব ও স্কেলযোগ্য ওয়েবসাইটের জন্য হাই-পারফরম্যান্স React ফ্রেমওয়ার্ক।"
+    }
+  },
+  {
+    "name": "Node.js",
+    "logo": "/images/tech/nodejs.webp",
+    "description": {
+      "en": "Efficient backend runtime for building fast and scalable applications.",
+      "bn": "দ্রুত ও স্কেলযোগ্য অ্যাপ্লিকেশন তৈরির কার্যকর ব্যাকএন্ড রানটাইম।"
+    }
+  },
+  {
+    "name": "MySQL",
+    "logo": "/images/tech/mysql.webp",
+    "description": {
+      "en": "Reliable database system for structured data storage.",
+      "bn": "গোছানো ডেটা সংরক্ষণের নির্ভরযোগ্য ডেটাবেস সিস্টেম।"
+    }
+  },
+  {
+    "name": "MongoDB",
+    "logo": "/images/tech/mongodb.webp",
+    "description": {
+      "en": "Flexible NoSQL database ideal for modern web applications.",
+      "bn": "আধুনিক ওয়েব অ্যাপ্লিকেশনের জন্য উপযোগী নমনীয় NoSQL ডেটাবেস।"
+    }
+  },
+  {
+    "name": "PHP",
+    "logo": "/images/tech/php.webp",
+    "description": {
+      "en": "Widely used server-side language for dynamic website development.",
+      "bn": "ডায়নামিক ওয়েবসাইট ডেভেলপমেন্টে বহুল ব্যবহৃত সার্ভার-সাইড ল্যাঙ্গুয়েজ।"
+    }
+  },
+  {
+    "name": "WordPress",
+    "logo": "/images/tech/wordpress.webp",
+    "description": {
+      "en": "Popular CMS for building flexible and easy-to-manage websites.",
+      "bn": "নমনীয় ও সহজে পরিচালনাযোগ্য ওয়েবসাইট তৈরির জনপ্রিয় CMS।"
+    }
+  },
+  {
+    "name": "Shopify",
+    "logo": "/images/tech/shopify.webp",
+    "description": {
+      "en": "E-commerce platform for creating powerful online stores.",
+      "bn": "শক্তিশালী অনলাইন স্টোর তৈরির ই-কমার্স প্ল্যাটফর্ম।"
+    }
+  },
+  {
+    "name": "WooCommerce",
+    "logo": "/images/tech/woocommerce.webp",
+    "description": {
+      "en": "Customizable e-commerce solution built on WordPress.",
+      "bn": "WordPress-এর উপর তৈরি কাস্টমাইজযোগ্য ই-কমার্স সলিউশন।"
+    }
+  },
+  {
+    "name": "Webflow",
+    "logo": "/images/tech/webflow.webp",
+    "description": {
+      "en": "Visual development platform for creating modern responsive websites.",
+      "bn": "আধুনিক রেসপন্সিভ ওয়েবসাইট তৈরির ভিজ্যুয়াল ডেভেলপমেন্ট প্ল্যাটফর্ম।"
+    }
+  },
+  {
+    "name": "Git & GitHub",
+    "logo": "/images/tech/github.webp",
+    "description": {
+      "en": "Version control tools for managing and collaborating on code.",
+      "bn": "কোড পরিচালনা ও একসাথে কাজ করার ভার্সন কন্ট্রোল টুল।"
+    }
+  }
+]

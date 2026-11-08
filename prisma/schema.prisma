@@ -170,6 +170,49 @@ model OutcomeCard {
   @@map("outcome_cards")
 }
 
+// A record of what happens on the website: logins, every change made in the admin panel, uploads and new inquiries.
+// Only the names of changed fields are kept, never their values.
+model ActivityLog {
+  id         String   @id @default(uuid())
+  action     String
+  resource   String?
+  resourceId String?
+  summary    String
+  details    String?
+  actorId    String?
+  actorName  String?
+  actorEmail String?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([action, createdAt])
+  @@map("activity_logs")
+}
+
+// Site-wide settings edited in the admin panel, one row per group: contact, images and text
+model SiteSetting {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+model Technology {
+  id          String   @id @default(uuid())
+  name        String
+  description Json
+  logo        String
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive, sortOrder])
+  @@map("technologies")
+}
+
 // Background images for the homepage hero. The first visible one is shown.
 model HeroBackground {
   id        String   @id @default(uuid())

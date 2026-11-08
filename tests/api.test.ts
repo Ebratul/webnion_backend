@@ -166,7 +166,7 @@ describe('content', () => {
   it('serves the aggregated homepage payload', async () => {
     const res = await request(app).get(`${API}/home?locale=bn`).expect(200);
     expect(Object.keys(res.body.data).sort()).toEqual(
-      ['caseStudies', 'clients', 'deliveryStories', 'faqs', 'heroBackground', 'outcomeCards', 'pricingPlans', 'projects', 'services', 'team', 'testimonials'].sort(),
+      ['caseStudies', 'clients', 'deliveryStories', 'faqs', 'heroBackground', 'outcomeCards', 'pricingPlans', 'projects', 'services', 'team', 'technologies', 'testimonials'].sort(),
     );
   });
 });
@@ -284,6 +284,107 @@ describe('admin editing', () => {
       .send({ budget: null, content: null })
       .expect(200);
     expect(res.body.data).toMatchObject({ budget: null, content: null });
+  });
+});
+
+describe('site settings', () => {
+  const contact = {
+    email: 'team@example.com',
+    phoneLocal: '01700000000',
+    phoneBdLabel: '+880 1700-000000',
+    phoneItLabel: '+39 300 000 0000',
+    whatsappNumber: '8801700000000',
+    facebook: 'https://facebook.com/x',
+    instagram: 'https://instagram.com/x',
+    privacy: 'https://example.com/privacy',
+  };
+  let original: Record<string, unknown>;
+
+  beforeAll(async () => {
+    original = (await request(app).get(`${API}/site-settings`).expect(200)).body.data;
+  });
+  afterAll(async () => {
+    await prisma.siteSetting.deleteMany({ where: { key: { in: ['contact', 'text'] } } });
+    for (const key of ['contact', 'text'] as const) {
+      const value = original[key] as object | null;
+      if (value && (key !== 'text' || Object.keys((value as { en: object }).en).length || Object.keys((value as { bn: object }).bn).length)) await prisma.siteSetting.create({ data: { key, value } });
+    }
+  });
+
+  it('saves contact details and custom text, and serves them to the website', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    await request(app).patch(`${API}/site-settings`).set('Authorization', token).send({ contact, text: { en: { 'hero.primaryCta': 'Go' }, bn: {} } }).expect(200);
+    const res = await request(app).get(`${API}/site-settings`).expect(200);
+    expect(res.body.data.contact.email).toBe('team@example.com');
+    expect(res.body.data.text.en['hero.primaryCta']).toBe('Go');
+  });
+
+  it('needs a login and refuses unsafe links', async () => {
+    await request(app).patch(`${API}/site-settings`).send({ contact }).expect(401);
+    const token = `Bearer ${await loginAs()}`;
+    await request(app).patch(`${API}/site-settings`).set('Authorization', token).send({ contact: { ...contact, facebook: 'javascript:alert(1)' } }).expect(400);
+    await request(app).patch(`${API}/site-settings`).set('Authorization', token).send({ text: { en: { 'bad key!': 'x' }, bn: {} } }).expect(400);
+  });
+});
+
+describe('activity log', () => {
+  const faq = { question: { en: 'Log test question', bn: 'লগ' }, answer: { en: 'Answer', bn: 'উত্তর' } };
+  const latest = async (token: string, query = '') => (await request(app).get(`${API}/activity-logs?limit=5${query}`).set('Authorization', token).expect(200)).body.data.items as { action: string; summary: string; details: string | null; actorEmail: string | null }[];
+
+  it('records adding, changing, hiding and deleting by name, with no field values', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    const created = await request(app).post(`${API}/faqs`).set('Authorization', token).send(faq).expect(201);
+    expect((await latest(token))[0]).toMatchObject({ action: 'CREATE', summary: 'Added "Log test question" to FAQs' });
+
+    await request(app).patch(`${API}/faqs/${created.body.data.id}`).set('Authorization', token).send({ answer: { en: 'Secret text', bn: 'x' } }).expect(200);
+    const [changed] = await latest(token);
+    expect(changed).toMatchObject({ action: 'UPDATE', details: 'Changed: answer' });
+    expect(JSON.stringify(changed)).not.toContain('Secret text');
+
+    await request(app).patch(`${API}/faqs/${created.body.data.id}`).set('Authorization', token).send({ isActive: false }).expect(200);
+    expect((await latest(token))[0]!.summary).toBe('Hid "Log test question" in FAQs');
+
+    await request(app).delete(`${API}/faqs/${created.body.data.id}`).set('Authorization', token).expect(200);
+    expect((await latest(token))[0]).toMatchObject({ action: 'DELETE', summary: 'Deleted "Log test question" from FAQs' });
+  });
+
+  it('turns a burst of reordering into one line', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    const rows = (await request(app).get(`${API}/faqs/all`).set('Authorization', token).expect(200)).body.data as { id: string; sortOrder: number }[];
+    const before = (await request(app).get(`${API}/activity-logs?limit=1&action=REORDER`).set('Authorization', token)).body.data.total as number;
+    await Promise.all(rows.slice(0, 3).map((row) => request(app).patch(`${API}/faqs/${row.id}`).set('Authorization', token).send({ sortOrder: row.sortOrder }).expect(200)));
+    const after = (await request(app).get(`${API}/activity-logs?limit=1&action=REORDER`).set('Authorization', token)).body.data.total as number;
+    expect(after - before).toBeLessThanOrEqual(1);
+  });
+
+  it('records a failed login without the password', async () => {
+    await request(app).post(`${API}/auth/login`).send({ email: 'nobody-log@test.dev', password: 'wrong-password-1' }).expect(401);
+    const token = `Bearer ${await loginAs()}`;
+    const [row] = await latest(token, '&action=LOGIN_FAILED');
+    expect(row).toMatchObject({ summary: 'Failed login for nobody-log@test.dev' });
+    expect(JSON.stringify(row)).not.toContain('wrong-password-1');
+  });
+
+  it('does not log a change that was refused', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    const before = (await request(app).get(`${API}/activity-logs?limit=1&action=CREATE`).set('Authorization', token)).body.data.total as number;
+    await request(app).post(`${API}/faqs`).set('Authorization', token).send({ question: 'not localized' }).expect(400);
+    const after = (await request(app).get(`${API}/activity-logs?limit=1&action=CREATE`).set('Authorization', token)).body.data.total as number;
+    expect(after).toBe(before);
+  });
+
+  it('is for admins only', async () => {
+    await request(app).get(`${API}/activity-logs`).expect(401);
+  });
+});
+
+describe('technologies', () => {
+  it('lets an admin add a technology, which the homepage then lists', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    const created = await request(app).post(`${API}/technologies`).set('Authorization', token).send({ name: 'Test Tech', description: { en: 'Text', bn: 'লেখা' }, logo: '/images/tech/php.webp', sortOrder: 999 }).expect(201);
+    const home = await request(app).get(`${API}/home?locale=bn`).expect(200);
+    expect(home.body.data.technologies.find((row: { id: string }) => row.id === created.body.data.id)).toMatchObject({ name: 'Test Tech', description: 'লেখা' });
+    await request(app).delete(`${API}/technologies/${created.body.data.id}`).set('Authorization', token).expect(200);
   });
 });
 

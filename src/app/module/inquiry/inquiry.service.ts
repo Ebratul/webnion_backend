@@ -2,6 +2,7 @@ import { config } from '../../config/index.js';
 import { sendMail } from '../../lib/mailer.js';
 import { prisma } from '../../lib/prisma.js';
 import { inquiryNotificationTemplate } from '../../templates/inquiry.template.js';
+import { ActivityLogService } from '../activity-log/activity-log.service.js';
 import type { CreateInquiryInput, UpdateInquiryInput } from './inquiry.interface.js';
 
 const create = async ({ website, ...data }: CreateInquiryInput) => {
@@ -9,6 +10,7 @@ const create = async ({ website, ...data }: CreateInquiryInput) => {
   if (website) return;
 
   const inquiry = await prisma.inquiry.create({ data });
+  await ActivityLogService.record({ action: 'INQUIRY', resource: 'inquiries', resourceId: inquiry.id, summary: `New inquiry from ${inquiry.name || inquiry.email}`, actorName: 'Website visitor' });
 
   // The inquiry is already saved, so a mail failure must not fail the request
   void sendMail({

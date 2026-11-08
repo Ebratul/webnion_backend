@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { ActivityLogRouter } from '../module/activity-log/activity-log.router.js';
 import { AuthRouter } from '../module/auth/auth.router.js';
 import { CaseStudyRouter } from '../module/case-study/case-study.router.js';
 import { ClientRouter } from '../module/client/client.router.js';
@@ -12,6 +13,8 @@ import { PricingRouter } from '../module/pricing/pricing.router.js';
 import { ProductRouter } from '../module/product/product.router.js';
 import { ProjectRouter } from '../module/project/project.router.js';
 import { ServiceRouter } from '../module/service/service.router.js';
+import { SiteSettingRouter } from '../module/site-setting/site-setting.router.js';
+import { TechnologyRouter } from '../module/technology/technology.router.js';
 import { TeamRouter } from '../module/team/team.router.js';
 import { TestimonialRouter } from '../module/testimonial/testimonial.router.js';
 import { UploadRouter } from '../module/upload/upload.router.js';
@@ -21,6 +24,9 @@ export const router = Router();
 
 router.use('/auth', AuthRouter);
 router.use('/users', UserRouter);
+router.use('/activity-logs', ActivityLogRouter);
+router.use('/site-settings', SiteSettingRouter);
+router.use('/technologies', TechnologyRouter);
 router.use('/home', HomeRouter);
 router.use('/hero-backgrounds', HeroBackgroundRouter);
 router.use('/services', ServiceRouter);

@@ -1,9 +1,10 @@
 import { randomUUID } from 'node:crypto';
 import { mkdirSync } from 'node:fs';
-import { open, rename, rm, stat } from 'node:fs/promises';
+import { open, readFile, rename, rm, stat } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import multer from 'multer';
+import { put } from '@vercel/blob';
 import { config } from '../../config/index.js';
 import { uploadToCloudinary } from '../../lib/cloudinary.js';
 import { AppError } from '../../utils/AppError.js';
@@ -78,7 +79,14 @@ const store = async (tempPath: string) => {
       return { path: url, kind: type.kind };
     }
 
-    if (onVercel) throw new AppError(503, 'File uploads are off until the Cloudinary keys are set');
+    // Vercel's disk does not last, so without Cloudinary the file goes to the Blob store that already holds the review videos
+    if (process.env.BLOB_READ_WRITE_TOKEN && onVercel) {
+      const { url } = await put(`uploads/${randomUUID()}.${type.extension}`, await readFile(tempPath), { access: 'public', contentType: type.kind === 'image' ? `image/${type.extension === 'jpg' ? 'jpeg' : type.extension}` : `video/${type.extension}` });
+      await rm(tempPath, { force: true });
+      return { path: url, kind: type.kind };
+    }
+
+    if (onVercel) throw new AppError(503, 'File uploads are not set up on this server');
 
     const name = `${randomUUID()}.${type.extension}`;
     await rename(tempPath, path.join(config.uploadDir, name));

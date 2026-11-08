@@ -8,4 +8,5 @@ import { AuthValidation } from './auth.validation.js';
 export const AuthRouter = Router();
 
 AuthRouter.post('/login', loginLimiter, validateRequest({ body: AuthValidation.login }), AuthController.login);
+AuthRouter.post('/logout', auth(), AuthController.logout);
 AuthRouter.get('/me', auth(), AuthController.me);

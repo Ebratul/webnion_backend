@@ -20,10 +20,10 @@ export const auth = (...roles: Role[]) =>
     if (!userId) throw new AppError(401, 'Invalid or expired token');
 
     // Checked on every request so deactivating a user or changing a role takes effect immediately
-    const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, role: true, isActive: true } });
+    const user = await prisma.user.findUnique({ where: { id: userId }, select: { id: true, name: true, email: true, role: true, isActive: true } });
     if (!user?.isActive) throw new AppError(401, 'Invalid or expired token');
     if (roles.length > 0 && !roles.includes(user.role)) throw new AppError(403, 'You do not have permission for this action');
 
-    req.user = { id: user.id, role: user.role };
+    req.user = { id: user.id, name: user.name, email: user.email, role: user.role };
     next();
   });

@@ -263,6 +263,8 @@ const deliveryStories = ordered([
   },
 ]);
 
+const technologies = ordered(readData<Prisma.TechnologyCreateManyInput[]>('technologies.json'));
+
 const pricingPlans = ordered([
   {
     slug: 'free',
@@ -475,6 +477,7 @@ const main = async () => {
   await seedIfEmpty('testimonials', () => prisma.testimonial.count(), () => prisma.testimonial.createMany({ data: testimonials }));
   await seedIfEmpty('delivery stories', () => prisma.deliveryStory.count(), () => prisma.deliveryStory.createMany({ data: deliveryStories }));
   await seedIfEmpty('outcome cards', () => prisma.outcomeCard.count(), () => prisma.outcomeCard.createMany({ data: outcomeCards }));
+  await seedIfEmpty('technologies', () => prisma.technology.count(), () => prisma.technology.createMany({ data: technologies }));
   await seedIfEmpty('pricing plans', () => prisma.pricingPlan.count(), () => prisma.pricingPlan.createMany({ data: pricingPlans }));
   await seedIfEmpty('FAQs', () => prisma.faq.count(), () => prisma.faq.createMany({ data: faqs }));
   await seedIfEmpty('team', () => prisma.teamMember.count(), () => prisma.teamMember.createMany({ data: team }));

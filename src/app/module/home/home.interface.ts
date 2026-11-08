@@ -7,9 +7,11 @@ import type { PublicPricing } from '../pricing/pricing.interface.js';
 import type { PublicProject } from '../project/project.interface.js';
 import type { PublicService } from '../service/service.interface.js';
 import type { PublicTeam } from '../team/team.interface.js';
+import type { PublicTechnology } from '../technology/technology.interface.js';
 import type { PublicTestimonial } from '../testimonial/testimonial.interface.js';
 
 export interface HomePayload {
+  technologies: PublicTechnology[];
   // The first visible hero background, or null to show the plain hero
   heroBackground: string | null;
   services: PublicService[];
