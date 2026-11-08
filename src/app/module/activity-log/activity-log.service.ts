@@ -1,4 +1,13 @@
+import { isIP } from 'node:net';
+import type { Request } from 'express';
 import { prisma } from '../../lib/prisma.js';
+
+// The admin panel calls this API from its own server, so req.ip is that server. It passes on the visitor's address in
+// this header. Someone calling the API directly could fake it, so it is for reading the log only and never for security.
+export const clientIp = (req: Request) => {
+  const forwarded = req.get('x-webnion-client-ip')?.trim();
+  return forwarded && isIP(forwarded) ? forwarded : req.ip;
+};
 
 export const ACTIVITY_ACTIONS = ['LOGIN', 'LOGIN_FAILED', 'LOGOUT', 'CREATE', 'UPDATE', 'DELETE', 'REORDER', 'UPLOAD', 'INQUIRY'] as const;
 export type ActivityAction = (typeof ACTIVITY_ACTIONS)[number];

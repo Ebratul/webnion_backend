@@ -1,6 +1,6 @@
 import type { RequestHandler } from 'express';
 import { prisma } from '../lib/prisma.js';
-import { ActivityLogService, type ActivityEntry } from '../module/activity-log/activity-log.service.js';
+import { ActivityLogService, clientIp, type ActivityEntry } from '../module/activity-log/activity-log.service.js';
 
 interface Named {
   findUnique(args: { where: { id: string } }): Promise<Record<string, unknown> | null>;
@@ -74,7 +74,7 @@ export const activityTrail: RequestHandler = async (req, res, next) => {
     if (res.statusCode >= 400 || !req.user) return send(payload);
 
     const body = (req.body ?? {}) as Record<string, unknown>;
-    const who = { actorId: req.user.id, actorName: req.user.name, actorEmail: req.user.email, ip: req.ip, resource: segment! };
+    const who = { actorId: req.user.id, actorName: req.user.name, actorEmail: req.user.email, ip: clientIp(req), resource: segment! };
     const actor = { ...who, ...(id ? { resourceId: id } : {}) };
     let entry: ActivityEntry;
 

@@ -365,6 +365,16 @@ describe('activity log', () => {
     expect(JSON.stringify(row)).not.toContain('wrong-password-1');
   });
 
+  it('shows the address the admin panel passes on, and ignores one that is not an address', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    const ipOf = async (forwarded: string) => {
+      await request(app).post(`${API}/auth/login`).set('x-webnion-client-ip', forwarded).send({ email: 'ip-test@test.dev', password: 'wrong-password-1' }).expect(401);
+      return (await request(app).get(`${API}/activity-logs?limit=1&action=LOGIN_FAILED`).set('Authorization', token)).body.data.items[0].ip as string;
+    };
+    expect(await ipOf('203.0.113.9')).toBe('203.0.113.9');
+    expect(await ipOf('<script>')).not.toContain('script');
+  });
+
   it('does not log a change that was refused', async () => {
     const token = `Bearer ${await loginAs()}`;
     const before = (await request(app).get(`${API}/activity-logs?limit=1&action=CREATE`).set('Authorization', token)).body.data.total as number;
