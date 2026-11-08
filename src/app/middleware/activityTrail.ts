@@ -79,7 +79,7 @@ export const activityTrail: RequestHandler = async (req, res, next) => {
     let entry: ActivityEntry;
 
     if (segment === 'uploads') {
-      entry = { ...actor, action: 'UPLOAD', summary: `Uploaded a ${String(payload.data?.kind ?? 'file')}`, details: String(payload.data?.path ?? '') };
+      entry = { ...actor, action: 'UPLOAD', summary: `Uploaded ${payload.data?.kind === 'image' ? 'an image' : 'a video'}`, details: String(payload.data?.path ?? '') };
     } else if (segment === 'site-settings') {
       entry = { ...actor, action: 'UPDATE', summary: `Updated ${Object.keys(body).join(' and ')} settings`, details: Object.entries((body.text ?? {}) as Record<string, object>).map(([language, values]) => `${language}: ${Object.keys(values).length} custom texts`).join(', ') };
     } else if (req.method === 'PATCH' && Object.keys(body).length === 1 && 'sortOrder' in body) {
