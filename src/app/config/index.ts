@@ -17,7 +17,8 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1),
   // The PEM certificate of the database host's own authority, for hosts like Aiven. \\n in a one-line value is read as a line break.
   DATABASE_CA_CERT: optionalEnv,
-  DATABASE_CONNECTION_LIMIT: z.coerce.number().int().min(1).max(20).default(5),
+  // Connections each running copy of the API may hold. Copies times this must stay under the host's limit.
+  DATABASE_CONNECTION_LIMIT: z.coerce.number().int().min(1).max(20).default(2),
   CORS_ORIGINS: z.string().default('http://localhost:3000'),
   TRUST_PROXY_HOPS: z.coerce.number().int().min(0).default(0),
   JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters'),
