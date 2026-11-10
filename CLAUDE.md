@@ -40,6 +40,10 @@ src/app/utils        catchAsync, sendResponse, content factories, validators
 - Clear a nullable Json column with `nullableJson`. Prisma rejects a plain null there.
 - MySQL: a plain `String` is VARCHAR(191). Give longer text `@db.Text` or `@db.VarChar(n)`, and URLs `@db.VarChar(2048)`. Text comparisons
   ignore case by default, so Prisma's `mode: 'insensitive'` does not exist here. The client connects through `@prisma/adapter-mariadb`.
+- Connections (`lib/databaseConfig.ts`, `lib/prisma.ts`): Aiven's free plan allows 46 connections and Vercel freezes a function after it
+  answers, so each function holds one connection, the pool drops idle ones after 5 seconds with `attachDatabasePool` keeping the
+  function awake that long, and every session tells MySQL to drop it after 30 idle seconds. Do not raise these without a bigger plan:
+  with the driver's defaults a burst of requests filled the server and the API could not connect for minutes.
 - Uploaded files go to `UPLOAD_DIR` and are served at `/uploads`. The file type comes from its first bytes, never the name.
 
 ## Media storage
