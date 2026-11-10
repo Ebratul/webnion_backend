@@ -1,21 +1,25 @@
 services:
-  db:
-    image: postgres:17-alpine
-    container_name: webnion-db
+  mysql:
+    image: mysql:8.4
+    container_name: webnion-mysql
     restart: unless-stopped
     environment:
-      POSTGRES_USER: webnion
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-webnion_local}
-      POSTGRES_DB: webnion
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-webnion_root_local}
+      MYSQL_DATABASE: webnion
+      MYSQL_USER: webnion
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-webnion_local}
+    # utf8mb4 holds Bangla and emoji. The test suite creates its own webnion_test database, so the app user may create databases locally.
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_0900_ai_ci']
     ports:
-      - "127.0.0.1:5440:5432"
+      - "127.0.0.1:3307:3306"
     volumes:
-      - webnion-db-data:/var/lib/postgresql/data
+      - webnion-mysql-data:/var/lib/mysql
+      - ./docker/mysql-init.sql:/docker-entrypoint-initdb.d/grants.sql:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U webnion -d webnion"]
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 20
 
 volumes:
-  webnion-db-data:
+  webnion-mysql-data:

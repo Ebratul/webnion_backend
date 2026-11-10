@@ -1,6 +1,6 @@
 # Webnion Backend
 
-REST API powering the [Webnion](https://webnion.com) website, built with Express 5, TypeScript, Prisma and PostgreSQL.
+REST API powering the [Webnion](https://webnion.com) website, built with Express 5, TypeScript, Prisma and MySQL 8.
 
 ## Getting Started
 
@@ -119,10 +119,10 @@ The API runs as one function, `api/index.js`, which loads the compiled `dist/app
 vercel deploy --prod
 ```
 
-- Set `DATABASE_URL` (pooled Neon address), `JWT_SECRET`, `CORS_ORIGINS` and `TRUST_PROXY_HOPS=1` in the project. Do not set
+- Set `DATABASE_URL` (a `mysql://` address, with `?ssl=true` when the host needs TLS), `JWT_SECRET`, `CORS_ORIGINS` and `TRUST_PROXY_HOPS=1` in the project. Do not set
   `NODE_ENV`: Vercel sets it at runtime, and setting it at build time would skip the build tools.
-- Run migrations and the seed from your machine with the direct, non-pooled address:
-  `DATABASE_URL=<direct> npm run db:deploy`, then `npm run db:seed`. Set `REVIEW_VIDEO_BASE` to seed videos hosted elsewhere.
+- Run migrations and the seed from your machine:
+  `DATABASE_URL=<mysql address> npm run db:deploy`, then `npm run db:seed`. Set `REVIEW_VIDEO_BASE` to seed videos hosted elsewhere.
 - `.vercelignore` keeps `.env` and `uploads/` out of the upload. The Vercel CLI does not read `.gitignore`, so keep it up to date.
 - Vercel keeps no files on disk, so admin uploads return 503 until the three `CLOUDINARY_*` keys are set.
 - Vercel limits each request to 4.5MB, so larger uploads fail even with Cloudinary on.

@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
 }
 
 enum Role {
@@ -43,7 +43,7 @@ model Service {
   slug        String   @unique
   title       Json
   description Json
-  image       String
+  image       String @db.VarChar(2048)
   content     Json?
   // Same format as content: each heading is a question and the paragraphs after it are the answer
   faqs        Json?
@@ -63,8 +63,8 @@ model Project {
   slug        String    @unique
   name        String
   category    Json
-  image       String
-  url         String?
+  image       String @db.VarChar(2048)
+  url         String? @db.VarChar(2048)
   client      String?
   budget      Json?
   location    Json?
@@ -86,13 +86,13 @@ model Product {
   slug       String   @unique
   name       Json
   summary    Json
-  image      String
+  image      String @db.VarChar(2048)
   type       String
   category   String
   pricing    String   @default("PAID")
   price      Int?
   currency   String   @default("USD")
-  url        String?
+  url        String? @db.VarChar(2048)
   views      Int      @default(0)
   isFeatured Boolean  @default(false)
   sortOrder  Int      @default(0)
@@ -109,7 +109,7 @@ model CaseStudy {
   slug        String    @unique
   title       Json
   category    Json
-  image       String
+  image       String @db.VarChar(2048)
   content     Json
   publishedAt DateTime?
   sortOrder   Int       @default(0)
@@ -126,9 +126,9 @@ model Testimonial {
   kind      TestimonialKind
   name      String
   role      Json
-  avatar    String?
-  image     String
-  videoUrl  String?
+  avatar    String? @db.VarChar(2048)
+  image     String @db.VarChar(2048)
+  videoUrl  String? @db.VarChar(2048)
   sortOrder Int             @default(0)
   isActive  Boolean         @default(true)
   createdAt DateTime        @default(now())
@@ -142,7 +142,7 @@ model DeliveryStory {
   id        String   @id @default(uuid())
   title     Json
   caption   Json
-  image     String
+  image     String @db.VarChar(2048)
   sortOrder Int      @default(0)
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -158,9 +158,9 @@ model OutcomeCard {
   title       Json
   description Json
   points      Json
-  image       String
+  image       String @db.VarChar(2048)
   buttonLabel Json?
-  buttonUrl   String?
+  buttonUrl   String? @db.VarChar(2048)
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
@@ -175,14 +175,14 @@ model OutcomeCard {
 model ActivityLog {
   id         String   @id @default(uuid())
   action     String
-  resource   String?
+  resource   String? @db.VarChar(64)
   resourceId String?
-  summary    String
-  details    String?
+  summary    String @db.Text
+  details    String? @db.Text
   actorId    String?
   actorName  String?
   actorEmail String?
-  ip         String?
+  ip         String? @db.VarChar(64)
   createdAt  DateTime @default(now())
 
   @@index([createdAt])
@@ -203,7 +203,7 @@ model Technology {
   id          String   @id @default(uuid())
   name        String
   description Json
-  logo        String
+  logo        String @db.VarChar(2048)
   sortOrder   Int      @default(0)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
@@ -217,7 +217,7 @@ model Technology {
 model HeroBackground {
   id        String   @id @default(uuid())
   name      String
-  image     String
+  image     String @db.VarChar(2048)
   sortOrder Int      @default(0)
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -267,7 +267,7 @@ model TeamMember {
   id        String   @id @default(uuid())
   name      Json
   role      Json
-  photo     String
+  photo     String @db.VarChar(2048)
   sortOrder Int      @default(0)
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -280,8 +280,8 @@ model TeamMember {
 model ClientLogo {
   id        String   @id @default(uuid())
   name      String
-  logo      String
-  url       String?
+  logo      String @db.VarChar(2048)
+  url       String? @db.VarChar(2048)
   sortOrder Int      @default(0)
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
@@ -300,11 +300,11 @@ model Inquiry {
   service   String?
   budget    String?
   country   String?
-  existingWebsite String?
-  message   String
+  existingWebsite String? @db.VarChar(300)
+  message   String @db.Text
   locale    String        @default("en")
   status    InquiryStatus @default(NEW)
-  notes     String?
+  notes     String? @db.Text
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
 

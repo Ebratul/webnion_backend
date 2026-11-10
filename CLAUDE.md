@@ -1,11 +1,11 @@
 # Webnion Backend
 
-REST API for the Webnion website: Express 5, TypeScript (ESM), Prisma 7, PostgreSQL, Zod.
+REST API for the Webnion website: Express 5, TypeScript (ESM), Prisma 7, MySQL 8, Zod.
 
 ## Commands
 
 ```bash
-docker compose up -d     # Postgres on 127.0.0.1:5440
+docker compose up -d     # MySQL on 127.0.0.1:3307
 npm run dev              # API on :5000 with reload
 npm test                 # Integration tests against the separate webnion_test database
 npm run typecheck
@@ -38,6 +38,8 @@ src/app/utils        catchAsync, sendResponse, content factories, validators
 - Input schemas use `z.strictObject`, so unknown fields are rejected rather than written to the database.
 - Never put `.default()` in a schema that is also `.partial()`: it overwrites stored values on PATCH. Let the database supply defaults.
 - Clear a nullable Json column with `nullableJson`. Prisma rejects a plain null there.
+- MySQL: a plain `String` is VARCHAR(191). Give longer text `@db.Text` or `@db.VarChar(n)`, and URLs `@db.VarChar(2048)`. Text comparisons
+  ignore case by default, so Prisma's `mode: 'insensitive'` does not exist here. The client connects through `@prisma/adapter-mariadb`.
 - Uploaded files go to `UPLOAD_DIR` and are served at `/uploads`. The file type comes from its first bytes, never the name.
 
 ## Media storage
@@ -46,8 +48,8 @@ Uploads go through `module/upload`. With all three `CLOUDINARY_*` keys set they 
 
 ## Deployment
 
-Hosted on Vercel through `api/index.js` and `vercel.json`, with the database on Neon. See the README. On Vercel the disk is read-only, so
-`module/upload` receives files in the temporary folder and refuses to store them without Cloudinary. Keep `.vercelignore` up to
+Hosted on Vercel through `api/index.js` and `vercel.json`, with the database on MySQL. See the README. On Vercel the disk is read-only, so
+`module/upload` receives files in the temporary folder and sends them to Vercel Blob without Cloudinary. Keep `.vercelignore` up to
 date: the CLI does not read `.gitignore`, and an uploaded `.env` would be loaded in production.
 
 ## Git

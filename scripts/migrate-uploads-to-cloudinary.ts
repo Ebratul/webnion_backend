@@ -4,7 +4,7 @@
 // Local files are kept as a backup. A file that fails stays local and is reported, and running again retries it.
 import { existsSync } from 'node:fs';
 import path from 'node:path';
-import pg from 'pg';
+import mariadb from 'mariadb';
 import { config } from '../src/app/config/index.js';
 import { uploadToCloudinary } from '../src/app/lib/cloudinary.js';
 
@@ -14,9 +14,9 @@ const COLUMNS: [table: string, column: string, type: string][] = [
   ['testimonials', 'avatar', 'text'],
   ['services', 'image', 'text'],
   ['projects', 'image', 'text'],
-  ['projects', 'content', 'jsonb'],
+  ['projects', 'content', 'json'],
   ['case_studies', 'image', 'text'],
-  ['case_studies', 'content', 'jsonb'],
+  ['case_studies', 'content', 'json'],
   ['delivery_stories', 'image', 'text'],
   ['team_members', 'photo', 'text'],
   ['client_logos', 'logo', 'text'],
@@ -30,12 +30,11 @@ const VIDEO_FILE = /\.(mp4|webm)$/i;
 const main = async () => {
   if (!config.cloudinary && !dryRun) throw new Error('Set the CLOUDINARY_ keys in .env first');
 
-  const db = new pg.Client({ connectionString: config.DATABASE_URL });
-  await db.connect();
+  const db = await mariadb.createConnection(config.DATABASE_URL.replace(/^mysql:/, 'mariadb:'));
 
   const found = new Set<string>();
   for (const [table, column] of COLUMNS) {
-    const { rows } = await db.query<{ value: string }>(`SELECT "${column}"::text AS value FROM "${table}" WHERE "${column}"::text LIKE '%/uploads/%'`);
+    const rows: { value: string }[] = await db.query(`SELECT CAST(\`${column}\` AS CHAR) AS value FROM \`${table}\` WHERE CAST(\`${column}\` AS CHAR) LIKE '%/uploads/%'`);
     for (const { value } of rows) for (const match of value.matchAll(UPLOAD_PATH)) found.add(match[0]);
   }
 
@@ -56,14 +55,16 @@ const main = async () => {
 
     try {
       const url = await uploadToCloudinary(filePath, VIDEO_FILE.test(filePath) ? 'video' : 'image');
-      await db.query('BEGIN');
+      await db.beginTransaction();
       for (const [table, column, type] of COLUMNS) {
-        await db.query(`UPDATE "${table}" SET "${column}" = replace("${column}"::text, $1, $2)::${type} WHERE "${column}"::text LIKE '%' || $1 || '%'`, [webPath, url]);
+        // A JSON column is updated as text and read back as JSON, so a path inside an article is replaced too
+        const value = type === 'json' ? `CAST(REPLACE(CAST(\`${column}\` AS CHAR), ?, ?) AS JSON)` : `REPLACE(\`${column}\`, ?, ?)`;
+        await db.query(`UPDATE \`${table}\` SET \`${column}\` = ${value} WHERE CAST(\`${column}\` AS CHAR) LIKE CONCAT('%', ?, '%')`, [webPath, url, webPath]);
       }
-      await db.query('COMMIT');
+      await db.commit();
       console.log(`  moved: ${webPath} -> ${url}`);
     } catch (error) {
-      await db.query('ROLLBACK').catch(() => undefined);
+      await db.rollback().catch(() => undefined);
       console.error(`  failed: ${webPath}: ${(error as Error).message}`);
       failed.push(webPath);
     }

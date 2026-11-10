@@ -43,14 +43,15 @@ interface ListQuery {
 }
 
 const list = async ({ page, limit, action, q }: ListQuery) => {
+  // MySQL's default collation already matches without regard to case
   const where = {
     ...(action ? { action } : {}),
     ...(q
       ? {
           OR: [
-            { summary: { contains: q, mode: 'insensitive' as const } },
-            { actorName: { contains: q, mode: 'insensitive' as const } },
-            { actorEmail: { contains: q, mode: 'insensitive' as const } },
+            { summary: { contains: q } },
+            { actorName: { contains: q } },
+            { actorEmail: { contains: q } },
           ],
         }
       : {}),

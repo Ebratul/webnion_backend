@@ -1,4 +1,4 @@
-import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import { readFileSync } from 'node:fs';
@@ -6,7 +6,7 @@ import { Prisma, PrismaClient } from '../src/generated/prisma/client.js';
 
 dotenv.config({ quiet: true });
 
-const prisma = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
+const prisma = new PrismaClient({ adapter: new PrismaMariaDb(process.env.DATABASE_URL!) });
 
 const readData = <T>(file: string) => JSON.parse(readFileSync(new URL(`./data/${file}`, import.meta.url), 'utf8')) as T;
 

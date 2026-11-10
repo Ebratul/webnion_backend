@@ -20,7 +20,7 @@
     "media:migrate": "tsx scripts/migrate-uploads-to-cloudinary.ts"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.10.1",
+    "@prisma/adapter-mariadb": "^7.10.1",
     "@prisma/client": "^7.10.1",
     "@vercel/blob": "^2.8.2",
     "bcryptjs": "^3.0.3",
@@ -31,9 +31,9 @@
     "express-rate-limit": "^8.7.3",
     "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.3",
+    "mariadb": "^3.5.5",
     "multer": "^2.5.0",
     "nodemailer": "^10.3.1",
-    "pg": "^8.23.1",
     "zod": "^4.6.7"
   },
   "devDependencies": {
@@ -45,6 +45,7 @@
     "@types/nodemailer": "^8.0.2",
     "@types/pg": "^8.23.1",
     "@types/supertest": "^7.2.1",
+    "pg": "^8.23.1",
     "prisma": "^7.10.1",
     "supertest": "^7.3.1",
     "tsx": "^4.23.15",
