@@ -3,10 +3,11 @@ import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
 import { readFileSync } from 'node:fs';
 import { Prisma, PrismaClient } from '../src/generated/prisma/client.js';
+import { mysqlConfig } from '../src/app/lib/databaseConfig.js';
 
 dotenv.config({ quiet: true });
 
-const prisma = new PrismaClient({ adapter: new PrismaMariaDb(process.env.DATABASE_URL!) });
+const prisma = new PrismaClient({ adapter: new PrismaMariaDb(mysqlConfig(process.env.DATABASE_URL!, process.env.DATABASE_CA_CERT)) });
 
 const readData = <T>(file: string) => JSON.parse(readFileSync(new URL(`./data/${file}`, import.meta.url), 'utf8')) as T;
 

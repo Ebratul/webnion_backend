@@ -48,7 +48,7 @@ Uploads go through `module/upload`. With all three `CLOUDINARY_*` keys set they 
 
 ## Deployment
 
-Hosted on Vercel through `api/index.js` and `vercel.json`, with the database on MySQL. See the README. On Vercel the disk is read-only, so
+Hosted on Vercel through `api/index.js` and `vercel.json`, with the database on Aiven MySQL 8.4 (Singapore), verified with `DATABASE_CA_CERT`. See the README. On Vercel the disk is read-only, so
 `module/upload` receives files in the temporary folder and sends them to Vercel Blob without Cloudinary. Keep `.vercelignore` up to
 date: the CLI does not read `.gitignore`, and an uploaded `.env` would be loaded in production.
 

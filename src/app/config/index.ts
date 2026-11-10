@@ -15,6 +15,9 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive().default(5000),
   DATABASE_URL: z.string().min(1),
+  // The PEM certificate of the database host's own authority, for hosts like Aiven. \\n in a one-line value is read as a line break.
+  DATABASE_CA_CERT: optionalEnv,
+  DATABASE_CONNECTION_LIMIT: z.coerce.number().int().min(1).max(20).default(5),
   CORS_ORIGINS: z.string().default('http://localhost:3000'),
   TRUST_PROXY_HOPS: z.coerce.number().int().min(0).default(0),
   JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters'),

@@ -7,6 +7,7 @@ import path from 'node:path';
 import mariadb from 'mariadb';
 import { config } from '../src/app/config/index.js';
 import { uploadToCloudinary } from '../src/app/lib/cloudinary.js';
+import { mysqlConfig } from '../src/app/lib/databaseConfig.js';
 
 const COLUMNS: [table: string, column: string, type: string][] = [
   ['testimonials', 'videoUrl', 'text'],
@@ -30,7 +31,7 @@ const VIDEO_FILE = /\.(mp4|webm)$/i;
 const main = async () => {
   if (!config.cloudinary && !dryRun) throw new Error('Set the CLOUDINARY_ keys in .env first');
 
-  const db = await mariadb.createConnection(config.DATABASE_URL.replace(/^mysql:/, 'mariadb:'));
+  const db = await mariadb.createConnection(mysqlConfig(config.DATABASE_URL, config.DATABASE_CA_CERT));
 
   const found = new Set<string>();
   for (const [table, column] of COLUMNS) {

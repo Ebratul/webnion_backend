@@ -119,7 +119,8 @@ The API runs as one function, `api/index.js`, which loads the compiled `dist/app
 vercel deploy --prod
 ```
 
-- Set `DATABASE_URL` (a `mysql://` address, with `?ssl=true` when the host needs TLS), `JWT_SECRET`, `CORS_ORIGINS` and `TRUST_PROXY_HOPS=1` in the project. Do not set
+- Set `DATABASE_URL` (a `mysql://` address; `?ssl-mode=REQUIRED` turns on TLS) and, for a host with its own certificate
+  authority such as Aiven, `DATABASE_CA_CERT` (its CA certificate, PEM). The connection is always verified. Then `JWT_SECRET`, `CORS_ORIGINS` and `TRUST_PROXY_HOPS=1` in the project. Do not set
   `NODE_ENV`: Vercel sets it at runtime, and setting it at build time would skip the build tools.
 - Run migrations and the seed from your machine:
   `DATABASE_URL=<mysql address> npm run db:deploy`, then `npm run db:seed`. Set `REVIEW_VIDEO_BASE` to seed videos hosted elsewhere.

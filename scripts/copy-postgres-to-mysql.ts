@@ -1,9 +1,10 @@
 // Copies every row from the old PostgreSQL database into the MySQL one, then reads both back and compares them.
 //   POSTGRES_DATABASE_URL=postgresql://… DATABASE_URL=mysql://… npx tsx scripts/copy-postgres-to-mysql.ts
-// Run `npm run db:deploy` on the MySQL database first. It refuses to write into a table that already has rows,
+// Set DATABASE_CA_CERT for a host with its own certificate authority. Run `npm run db:deploy` on the MySQL database first. It refuses to write into a table that already has rows,
 // unless --replace is given, which empties those tables first. The PostgreSQL database is only read.
 import mariadb from 'mariadb';
 import pg from 'pg';
+import { mysqlConfig } from '../src/app/lib/databaseConfig.js';
 
 // Prisma stores times in UTC in "timestamp without time zone" columns. Read them as text, so no time zone shifts them.
 pg.types.setTypeParser(1114, (value) => value);
@@ -32,10 +33,8 @@ const sameValue = (a: unknown, b: unknown, json: boolean): boolean => {
 const main = async () => {
   const pgClient = new pg.Client({ connectionString: source });
   await pgClient.connect();
-  const url = new URL(target);
-  url.protocol = 'mariadb:';
   // dateStrings keeps DATETIME values as text, the same form PostgreSQL gave above
-  const my = await mariadb.createConnection({ host: url.hostname, port: Number(url.port || 3306), user: decodeURIComponent(url.username), password: decodeURIComponent(url.password), database: url.pathname.slice(1), allowPublicKeyRetrieval: true, dateStrings: true, ssl: url.searchParams.get('ssl') === 'true' ? { rejectUnauthorized: true } : undefined });
+  const my = await mariadb.createConnection({ ...mysqlConfig(target, process.env.DATABASE_CA_CERT), dateStrings: true });
 
   let problems = 0;
   for (const table of TABLES) {
