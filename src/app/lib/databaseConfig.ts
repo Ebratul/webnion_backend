@@ -17,6 +17,8 @@ export const mysqlConfig = (address: string, caCert?: string, connectionLimit = 
     password: decodeURIComponent(url.password),
     database: decodeURIComponent(url.pathname.slice(1)),
     connectionLimit,
+    // The driver gives up after one second by default, shorter than a TLS handshake can take on a slow network
+    connectTimeout: 10_000,
     ...(tls ? { ssl: { rejectUnauthorized: true, ...(ca ? { ca } : {}) } } : { allowPublicKeyRetrieval: true }),
   };
 };
