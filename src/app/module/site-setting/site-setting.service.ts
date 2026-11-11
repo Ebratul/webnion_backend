@@ -4,6 +4,8 @@ import { prisma } from '../../lib/prisma.js';
 export interface SiteSettings {
   contact: Record<string, string> | null;
   images: Record<string, string> | null;
+  brand: Record<string, string | null> | null;
+  homepage: { hidden: string[] } | null;
   text: { en: Record<string, string>; bn: Record<string, string> };
 }
 
@@ -14,11 +16,13 @@ const get = async (): Promise<SiteSettings> => {
   return {
     contact: (value('contact') as SiteSettings['contact']) ?? null,
     images: (value('images') as SiteSettings['images']) ?? null,
+    brand: (value('brand') as SiteSettings['brand']) ?? null,
+    homepage: (value('homepage') as SiteSettings['homepage']) ?? null,
     text: (value('text') as SiteSettings['text']) ?? { en: {}, bn: {} },
   };
 };
 
-const update = async (input: Partial<Record<'contact' | 'images' | 'text', Prisma.InputJsonValue>>) => {
+const update = async (input: Partial<Record<'contact' | 'images' | 'brand' | 'homepage' | 'text', Prisma.InputJsonValue>>) => {
   await prisma.$transaction(
     Object.entries(input).map(([key, value]) =>
       prisma.siteSetting.upsert({ where: { key }, update: { value: value! }, create: { key, value: value! } }),

@@ -319,6 +319,17 @@ describe('site settings', () => {
     expect(res.body.data.text.en['hero.primaryCta']).toBe('Go');
   });
 
+  it('saves the brand and hidden homepage sections, and refuses a colour that is not a hex code', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    const brand = { siteName: 'Webnion', primaryColor: '#1A73E8', logoOnDark: '/images/brand/logo-white.png', logoOnLight: '/images/brand/logo-dark.png', favicon: null };
+    await request(app).patch(`${API}/site-settings`).set('Authorization', token).send({ brand, homepage: { hidden: ['process'] } }).expect(200);
+    const res = await request(app).get(`${API}/site-settings`).expect(200);
+    expect(res.body.data.brand.primaryColor).toBe('#1a73e8');
+    expect(res.body.data.homepage.hidden).toEqual(['process']);
+    await request(app).patch(`${API}/site-settings`).set('Authorization', token).send({ brand: { ...brand, primaryColor: 'red; } body { display: none' } }).expect(400);
+    await prisma.siteSetting.deleteMany({ where: { key: { in: ['brand', 'homepage'] } } });
+  });
+
   it('needs a login and refuses unsafe links', async () => {
     await request(app).patch(`${API}/site-settings`).send({ contact }).expect(401);
     const token = `Bearer ${await loginAs()}`;

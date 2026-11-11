@@ -1,6 +1,6 @@
 # Webnion Website: Project Plan
 
-Rebuild of the webnion.com homepage as a Next.js frontend and a TypeScript/Express API on PostgreSQL.
+Rebuild of the webnion.com homepage as a Next.js frontend and a TypeScript/Express API on MySQL.
 Bilingual (English / বাংলা), light and dark themes, following the 13-section Updated Homepage Flow.
 
 ## 1. Repositories
@@ -8,7 +8,7 @@ Bilingual (English / বাংলা), light and dark themes, following the 13-s
 | Folder | Repo | Stack |
 | --- | --- | --- |
 | `webnion_frontend/` | github.com/Ebratul/webnion_frontend | Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4 |
-| `webnion_backend/` | github.com/Ebratul/webnion_backend | Express 5, TypeScript, Prisma 7, PostgreSQL, Zod |
+| `webnion_backend/` | github.com/Ebratul/webnion_backend | Express 5, TypeScript, Prisma 7, MySQL 8, Zod |
 
 **Git rule:** commits are authored by `Ebratul <ebratulshaharier@gmail.com>` with no `Co-Authored-By` trailer
 and no generated-by footer, so Claude never appears as a GitHub contributor.
@@ -82,7 +82,7 @@ HTML-escaped email template, no default admin password.
 
 1. Clone repos, extract references, collect real content from webnion.com. **Done**
 2. Write this plan and `CLAUDE.md` files. **Done**
-3. Backend: scaffold, Docker Postgres, Prisma schema, migration, seed. **Done**
+3. Backend: scaffold, Docker MySQL, Prisma schema, migration, seed. **Done** (moved from PostgreSQL to MySQL on 2026-11-11)
 4. Backend: middleware, utilities, all modules, tests. **Done**
 5. Frontend: scaffold, design tokens, fonts, i18n, theme. **Done**
 6. Frontend: build sections 01 to 13. **Done**
@@ -128,7 +128,7 @@ are set in the backend's Vercel environment. Until then uploads return a clear e
 | --- | --- | --- |
 | Website | Vercel project `webnion-frontend`, region `sin1` | https://webnion-frontend-jade.vercel.app |
 | API | Vercel project `webnion-backend`, region `sin1` | https://webnion-backend.vercel.app |
-| Database | Neon project `webnion`, Singapore | Pooled address in Vercel, direct address for migrations |
+| Database | Aiven MySQL 8.4, Singapore (free plan) | `DATABASE_URL` and `DATABASE_CA_CERT` in Vercel; migrations run from a machine with the same values |
 | Review videos | Vercel Blob store `webnion-media` | Saved in `testimonials.videoUrl` |
 
 The `webnion.com` domain still points to the old site. `webnion-frontend` is connected to GitHub, so a push to it deploys the site.
