@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { assetSchema, httpUrlSchema } from '../../utils/validators.js';
+import { assetSchema, httpUrlSchema, localizedTextSchema } from '../../utils/validators.js';
 
 const phone = z.string().trim().regex(/^\+?[\d\s-]{6,24}$/, 'Use digits, spaces and dashes only');
 
@@ -7,7 +7,8 @@ const contact = z.strictObject({
   email: z.email().max(200),
   phoneLocal: phone,
   phoneBdLabel: phone,
-  phoneItLabel: phone,
+  // The second phone may be left empty, and is then not shown
+  phoneItLabel: z.union([phone, z.literal('')]),
   whatsappNumber: phone,
   facebook: httpUrlSchema,
   instagram: httpUrlSchema,
@@ -18,6 +19,8 @@ const images = z.strictObject({
   outcomeFounder: assetSchema,
   outcomeHandover: assetSchema,
   outcomeTeam: assetSchema,
+  serviceContactCard: assetSchema,
+  servicesClosingPreview: assetSchema,
 });
 
 // Name, logos and colour. The colour must be a six-digit hex so it can go straight into the site's stylesheet.
@@ -27,6 +30,36 @@ const brand = z.strictObject({
   logoOnDark: assetSchema,
   logoOnLight: assetSchema,
   favicon: assetSchema.nullable(),
+  shareImage: assetSchema.nullable(),
+  defaultTheme: z.enum(['dark', 'light']),
+});
+
+// A page on the site (/contact), a homepage section (#pricing), or a full address. A protocol-relative //address is refused.
+const linkHref = z
+  .string()
+  .trim()
+  .max(2048)
+  .refine((value) => /^(#[\w-]+|\/(?!\/)\S*|https?:\/\/\S+|mailto:\S+|tel:\+?[\d\s-]+)$/.test(value), 'Use /page, #section or a full address starting with https://');
+
+const link = z.strictObject({ label: localizedTextSchema, href: linkHref });
+
+export const SOCIAL_NETWORKS = ['facebook', 'instagram', 'linkedin', 'youtube', 'x', 'tiktok', 'whatsapp', 'telegram', 'messenger', 'pinterest', 'threads', 'github', 'behance', 'dribbble', 'website'] as const;
+
+// The header menu, the footer's link columns, social links and offices
+const navigation = z.strictObject({
+  header: z.array(link).max(12),
+  headerButton: z.strictObject({ href: linkHref }),
+  footerQuick: z.array(link).max(20),
+  footerServices: z.array(link).max(20),
+  socials: z.array(z.strictObject({ network: z.enum(SOCIAL_NETWORKS), url: httpUrlSchema })).max(15),
+  offices: z.array(z.strictObject({ name: localizedTextSchema, address: localizedTextSchema })).max(8),
+});
+
+// Site behaviour: the floating WhatsApp button, who gets inquiry emails, and the budget choices in the inquiry forms
+const options = z.strictObject({
+  whatsappButton: z.boolean(),
+  inquiryEmails: z.array(z.email().max(200)).min(1).max(10),
+  budgets: z.array(localizedTextSchema).min(1).max(15),
 });
 
 // Homepage sections the admin has hidden, by name, such as "process"
@@ -43,6 +76,8 @@ const update = z
     images: images.optional(),
     brand: brand.optional(),
     homepage: homepage.optional(),
+    navigation: navigation.optional(),
+    options: options.optional(),
     text: z.strictObject({ en: textOverrides, bn: textOverrides }).optional(),
   })
   .refine((value) => Object.keys(value).length > 0, 'Nothing to update');

@@ -10,6 +10,8 @@ const transporter = config.SMTP_HOST
     })
   : null;
 
+export const isMailConfigured = () => transporter !== null;
+
 export const sendMail = async (mail: { to: string; subject: string; html: string; replyTo?: string }) => {
   if (!transporter) return false;
   await transporter.sendMail({ from: config.MAIL_FROM, ...mail });

@@ -44,6 +44,9 @@ src/app/utils        catchAsync, sendResponse, content factories, validators
   answers, so each function holds one connection, the pool drops idle ones after 5 seconds with `attachDatabasePool` keeping the
   function awake that long, and every session tells MySQL to drop it after 30 idle seconds. Do not raise these without a bigger plan:
   with the driver's defaults a burst of requests filled the server and the API could not connect for minutes.
+- Site settings (`module/site-setting`) hold one JSON row per key: contact, images, brand, homepage, navigation, options and text.
+  Anything never saved is left out and the website uses its built-in value. Links in navigation are checked to be `/page`, `#section`
+  or `https://`. Inquiry emails go to `options.inquiryEmails`, or `INQUIRY_NOTIFY_TO` until set; they need the `SMTP_*` keys.
 - Uploaded files go to `UPLOAD_DIR` and are served at `/uploads`. The file type comes from its first bytes, never the name.
 
 ## Media storage

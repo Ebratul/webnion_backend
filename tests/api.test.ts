@@ -321,13 +321,39 @@ describe('site settings', () => {
 
   it('saves the brand and hidden homepage sections, and refuses a colour that is not a hex code', async () => {
     const token = `Bearer ${await loginAs()}`;
-    const brand = { siteName: 'Webnion', primaryColor: '#1A73E8', logoOnDark: '/images/brand/logo-white.png', logoOnLight: '/images/brand/logo-dark.png', favicon: null };
+    const brand = { siteName: 'Webnion', primaryColor: '#1A73E8', logoOnDark: '/images/brand/logo-white.png', logoOnLight: '/images/brand/logo-dark.png', favicon: null, shareImage: null, defaultTheme: 'dark' };
     await request(app).patch(`${API}/site-settings`).set('Authorization', token).send({ brand, homepage: { hidden: ['process'] } }).expect(200);
     const res = await request(app).get(`${API}/site-settings`).expect(200);
     expect(res.body.data.brand.primaryColor).toBe('#1a73e8');
     expect(res.body.data.homepage.hidden).toEqual(['process']);
     await request(app).patch(`${API}/site-settings`).set('Authorization', token).send({ brand: { ...brand, primaryColor: 'red; } body { display: none' } }).expect(400);
     await prisma.siteSetting.deleteMany({ where: { key: { in: ['brand', 'homepage'] } } });
+  });
+
+  it('saves menus, social links, offices and options, and refuses unsafe links in them', async () => {
+    const token = `Bearer ${await loginAs()}`;
+    const t = (en: string) => ({ en, bn: en });
+    const navigation = {
+      header: [{ label: t('Work'), href: '/project' }, { label: t('Prices'), href: '#pricing' }],
+      headerButton: { href: '/contact' },
+      footerQuick: [{ label: t('Blog'), href: 'https://example.com/blog' }],
+      footerServices: [],
+      socials: [{ network: 'youtube', url: 'https://youtube.com/@webnion' }],
+      offices: [{ name: t('Dhaka'), address: t('Road 5') }],
+    };
+    const options = { whatsappButton: false, inquiryEmails: ['sales@example.com'], budgets: [t('Under $500')] };
+    await request(app).patch(`${API}/site-settings`).set('Authorization', token).send({ navigation, options }).expect(200);
+    const res = await request(app).get(`${API}/site-settings`).expect(200);
+    expect(res.body.data.navigation.header[1].href).toBe('#pricing');
+    expect(res.body.data.options.whatsappButton).toBe(false);
+    for (const href of ['javascript:alert(1)', '//evil.example', 'data:text/html,x']) {
+      await request(app).patch(`${API}/site-settings`).set('Authorization', token).send({ navigation: { ...navigation, header: [{ label: t('x'), href }] } }).expect(400);
+    }
+    await request(app).patch(`${API}/site-settings`).set('Authorization', token).send({ navigation: { ...navigation, socials: [{ network: 'myspace', url: 'https://x.com' }] } }).expect(400);
+    const status = await request(app).get(`${API}/site-settings/status`).set('Authorization', token).expect(200);
+    expect(typeof status.body.data.mailConfigured).toBe('boolean');
+    await request(app).get(`${API}/site-settings/status`).expect(401);
+    await prisma.siteSetting.deleteMany({ where: { key: { in: ['navigation', 'options'] } } });
   });
 
   it('needs a login and refuses unsafe links', async () => {
