@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { ActivityLogRouter } from '../module/activity-log/activity-log.router.js';
+import { AiRouter } from '../module/ai/ai.router.js';
 import { AuthRouter } from '../module/auth/auth.router.js';
+import { BlogPostRouter } from '../module/blog-post/blog-post.router.js';
 import { CaseStudyRouter } from '../module/case-study/case-study.router.js';
 import { ClientRouter } from '../module/client/client.router.js';
 import { DeliveryStoryRouter } from '../module/delivery-story/delivery-story.router.js';
@@ -42,3 +44,5 @@ router.use('/team', TeamRouter);
 router.use('/clients', ClientRouter);
 router.use('/inquiries', InquiryRouter);
 router.use('/uploads', UploadRouter);
+router.use('/blog-posts', BlogPostRouter);
+router.use('/ai', AiRouter);

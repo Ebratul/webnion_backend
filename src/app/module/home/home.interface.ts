@@ -1,3 +1,4 @@
+import type { BlogPostService } from '../blog-post/blog-post.service.js';
 import type { PublicCaseStudy } from '../case-study/case-study.interface.js';
 import type { PublicClient } from '../client/client.interface.js';
 import type { PublicDeliveryStory } from '../delivery-story/delivery-story.interface.js';
@@ -24,4 +25,6 @@ export interface HomePayload {
   faqs: PublicFaq[];
   team: PublicTeam[];
   clients: PublicClient[];
+  // The three newest published blog posts
+  blogPosts: Awaited<ReturnType<typeof BlogPostService.listPublic>>;
 }

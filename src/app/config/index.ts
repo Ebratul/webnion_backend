@@ -34,6 +34,15 @@ const envSchema = z.object({
   CLOUDINARY_API_KEY: optionalEnv,
   CLOUDINARY_API_SECRET: optionalEnv,
   CLOUDINARY_FOLDER: z.string().trim().min(1).default('webnion'),
+  // The Python AI service (webnion_rag_agent). Without these the AI features stay off.
+  AGENT_URL: optionalEnv,
+  AGENT_SHARED_SECRET: optionalEnv.refine((value) => !value || value.length >= 32, 'AGENT_SHARED_SECRET must be at least 32 characters'),
+  // Encrypts the provider keys saved in AI Settings. At least 32 characters; changing it makes saved keys unreadable.
+  AI_SECRETS_KEY: optionalEnv.refine((value) => !value || value.length >= 32, 'AI_SECRETS_KEY must be at least 32 characters'),
+  // Vercel Cron sends it to the nightly search index check
+  CRON_SECRET: optionalEnv,
+  // Local testing only: allows the "fake" AI provider, which the AI service also refuses unless told otherwise
+  AI_ALLOW_FAKE: z.enum(['0', '1']).default('0'),
 });
 
 const parsed = envSchema.safeParse(process.env);
@@ -51,8 +60,16 @@ if (cloudinaryKeysSet > 0 && cloudinaryKeysSet < 3) {
   throw new Error('Invalid environment variables:\n  Set all of CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET, or none of them');
 }
 
+const agentUrl = parsed.data.AGENT_URL?.replace(/\/+$/, '');
+// Keys travel to the AI service, so outside local development it must be reached over https
+if (agentUrl && parsed.data.NODE_ENV === 'production' && !agentUrl.startsWith('https://')) {
+  throw new Error('Invalid environment variables:\n  AGENT_URL must start with https:// in production');
+}
+
 export const config = {
   ...parsed.data,
+  agent: agentUrl && parsed.data.AGENT_SHARED_SECRET ? { url: agentUrl, secret: parsed.data.AGENT_SHARED_SECRET } : null,
+  allowFakeAi: parsed.data.AI_ALLOW_FAKE === '1' && parsed.data.NODE_ENV !== 'production',
   cloudinary: cloudName && apiKey && apiSecret ? { cloudName, apiKey, apiSecret, folder } : null,
   uploadDir: path.resolve(parsed.data.UPLOAD_DIR),
   corsOrigins: parsed.data.CORS_ORIGINS.split(',').map((origin) => origin.trim()).filter(Boolean),

@@ -22,6 +22,7 @@ const TRACKED: Record<string, { label: string; model?: Named }> = {
   'outcome-cards': { label: 'Outcome Cards', model: prisma.outcomeCard as unknown as Named },
   technologies: { label: 'Technologies', model: prisma.technology as unknown as Named },
   inquiries: { label: 'Inquiries', model: prisma.inquiry as unknown as Named },
+  'blog-posts': { label: 'Blog', model: prisma.blogPost as unknown as Named },
   users: { label: 'Users', model: prisma.user as unknown as Named },
   uploads: { label: 'Uploads' },
   'site-settings': { label: 'Site Settings' },

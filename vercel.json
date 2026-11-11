@@ -4,5 +4,9 @@
   "buildCommand": "npm run build",
   "outputDirectory": "public",
   "regions": ["sin1"],
+  "functions": {
+    "api/index.js": { "maxDuration": 300 }
+  },
+  "crons": [{ "path": "/api/v1/ai/index/cron", "schedule": "0 20 * * *" }],
   "rewrites": [{ "source": "/(.*)", "destination": "/api/index" }]
 }

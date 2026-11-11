@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { mkdirSync } from 'node:fs';
-import { open, readFile, rename, rm, stat } from 'node:fs/promises';
+import { open, readFile, rename, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import multer from 'multer';
@@ -97,4 +97,11 @@ const store = async (tempPath: string) => {
   }
 };
 
-export const UploadService = { store };
+// Saves a file made on the server, such as an AI picture, the same way as an upload, with the same type check
+const storeBuffer = async (data: Buffer) => {
+  const tempPath = path.join(incomingDir, `.incoming-${randomUUID()}`);
+  await writeFile(tempPath, data);
+  return store(tempPath);
+};
+
+export const UploadService = { store, storeBuffer };

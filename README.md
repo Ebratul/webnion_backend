@@ -41,6 +41,24 @@ Content resources: `/services`, `/projects`, `/products`, `/case-studies`, `/tes
 
 Staff can upload images and videos with `POST /uploads`.
 
+Blog: `GET /blog-posts` (published, `?tag=`), `GET /blog-posts/:slug`, and for staff `GET /blog-posts/all`, `GET /blog-posts/id/:id`,
+`POST`, `PATCH /:id`, `DELETE /:id`. Drafts and posts with a future date stay hidden.
+
+AI (needs the Python service in `webnion_rag_agent`):
+
+| Method | Path | Access | Purpose |
+| --- | --- | --- | --- |
+| GET | `/ai/public-config` | Public | Whether to show the chat button, its greeting and suggestions. No secrets |
+| POST | `/ai/chat` | Public, rate limited, daily caps | The site assistant, streamed as Server-Sent Events |
+| GET, POST | `/ai/admin-config`, `/ai/chat/admin` | Staff | The assistant inside the admin panel |
+| GET, PATCH | `/ai/settings` | Admin | Switches, models, encrypted keys (only the last four characters come back), limits, greeting |
+| POST | `/ai/settings/test` | Admin | Tests a provider, model and key, and records what the model supports |
+| GET | `/ai/usage?days=` | Admin | Requests, tokens, pictures and estimated cost per day |
+| POST | `/ai/index/site-text`, `/ai/index/rebuild`, `/ai/index/search` | Admin | Pinecone search index |
+| GET | `/ai/index/documents` | Admin | The records the assistant answers from |
+| GET | `/ai/index/cron` | Vercel Cron with `CRON_SECRET` | Nightly index check |
+| GET, POST | `/ai/studio/status`, `/ai/studio/outline`, `/ai/studio/write`, `/ai/studio/posts/:id/picture`, `/ai/studio/posts/:id/translate` | Staff | AI Studio |
+
 Staff requests send `Authorization: Bearer <token>`.
 
 ## Testing
@@ -129,3 +147,7 @@ vercel deploy --prod
 - `.vercelignore` keeps `.env` and `uploads/` out of the upload. The Vercel CLI does not read `.gitignore`, so keep it up to date.
 - Vercel keeps no files on disk, so admin uploads return 503 until the three `CLOUDINARY_*` keys are set.
 - Vercel limits each request to 4.5MB, so larger uploads fail even with Cloudinary on.
+- AI: set `AGENT_URL` (the AI service's https address), `AGENT_SHARED_SECRET` (the same value as on the AI service),
+  `AI_SECRETS_KEY` (32 or more random characters; changing it makes saved provider keys unreadable) and `CRON_SECRET`.
+  Provider, Pinecone and LangSmith keys are entered in AI Settings, not as environment variables. `vercel.json` gives the
+  function five minutes for AI Studio and schedules the nightly index check.

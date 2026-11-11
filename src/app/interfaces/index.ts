@@ -8,7 +8,7 @@ export type ContentBlock =
   | { type: 'heading'; text: string }
   | { type: 'paragraph'; text: string }
   | { type: 'list'; items: string[] }
-  | { type: 'image'; src: string };
+  | { type: 'image'; src: string; alt?: string };
 
 export interface LocalizedContent {
   blocks: ContentBlock[];

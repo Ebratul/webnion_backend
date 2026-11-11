@@ -12,7 +12,7 @@ const create = async ({ website, ...data }: CreateInquiryInput) => {
   if (website) return;
 
   const inquiry = await prisma.inquiry.create({ data });
-  await ActivityLogService.record({ action: 'INQUIRY', resource: 'inquiries', resourceId: inquiry.id, summary: `New inquiry from ${inquiry.name || inquiry.email}`, actorName: 'Website visitor' });
+  await ActivityLogService.record({ action: 'INQUIRY', resource: 'inquiries', resourceId: inquiry.id, summary: `New inquiry from ${inquiry.name || inquiry.email}${inquiry.source === 'chat' ? ' (chat assistant)' : ''}`, actorName: 'Website visitor' });
 
   // The inquiry is already saved, so a mail failure must not fail the request. waitUntil keeps a Vercel function awake
   // until the email is sent; without it the function can be frozen as soon as it has answered.

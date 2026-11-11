@@ -45,13 +45,13 @@ export const slugParamSchema = z.object({ slug: slugSchema });
 
 const blockText = z.string().trim().min(1).max(5000);
 
-const contentBlocksSchema = z
+export const contentBlocksSchema = z
   .array(
     z.discriminatedUnion('type', [
       z.strictObject({ type: z.literal('heading'), text: blockText }),
       z.strictObject({ type: z.literal('paragraph'), text: blockText }),
       z.strictObject({ type: z.literal('list'), items: z.array(blockText).min(1) }),
-      z.strictObject({ type: z.literal('image'), src: assetSchema }),
+      z.strictObject({ type: z.literal('image'), src: assetSchema, alt: z.string().trim().max(300).optional() }),
     ]),
   )
   .min(1);

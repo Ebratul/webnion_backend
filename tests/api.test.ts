@@ -166,7 +166,7 @@ describe('content', () => {
   it('serves the aggregated homepage payload', async () => {
     const res = await request(app).get(`${API}/home?locale=bn`).expect(200);
     expect(Object.keys(res.body.data).sort()).toEqual(
-      ['caseStudies', 'clients', 'deliveryStories', 'faqs', 'heroBackground', 'outcomeCards', 'pricingPlans', 'projects', 'services', 'team', 'technologies', 'testimonials'].sort(),
+      ['blogPosts', 'caseStudies', 'clients', 'deliveryStories', 'faqs', 'heroBackground', 'outcomeCards', 'pricingPlans', 'projects', 'services', 'team', 'technologies', 'testimonials'].sort(),
     );
   });
 });

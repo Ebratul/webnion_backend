@@ -24,6 +24,8 @@ export const InquiryValidation = {
     existingWebsite: optionalText(300),
     message: blankOr(z.string().min(10, 'Please add a little more detail').max(2000)),
     locale: z.enum(['en', 'bn']).default('en'),
+    // Where the visitor sent it from: the form, or the chat assistant after they checked the details
+    source: z.enum(['form', 'chat']).default('form'),
     // Honeypot: hidden from people, filled in by bots
     website: z.string().max(200).optional(),
   }),

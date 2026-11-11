@@ -47,6 +47,17 @@ src/app/utils        catchAsync, sendResponse, content factories, validators
 - Site settings (`module/site-setting`) hold one JSON row per key: contact, images, brand, homepage, navigation, options and text.
   Anything never saved is left out and the website uses its built-in value. Links in navigation are checked to be `/page`, `#section`
   or `https://`. Inquiry emails go to `options.inquiryEmails`, or `INQUIRY_NOTIFY_TO` until set; they need the `SMTP_*` keys.
+- AI (`module/ai`): settings live in `ai_settings` (row `main`), with provider, Pinecone and LangSmith keys encrypted by
+  `lib/secrets.ts` (AES-256-GCM, `AI_SECRETS_KEY`, slot name bound in). Keys never leave the API except inside signed
+  requests to the Python AI service (`lib/agent.ts`, HMAC with `AGENT_SHARED_SECRET`); the browser sees `hasKey` and the
+  last four characters only. Base addresses pass `lib/safeUrl.ts` (public https only). Public chat (`POST /ai/chat`) is
+  rate limited per minute, per visitor per day (hashed IP in `ai_visitor_usage`) and per day overall, and streams SSE.
+  Chat proposes inquiries; the visitor sends them through `POST /inquiries` with `source: 'chat'`. Usage per day is in
+  `ai_usage`. Content changes update the search index in the background (`middleware/aiIndexSync.ts`), and Vercel Cron
+  runs `GET /ai/index/cron` nightly with `CRON_SECRET`. Without Pinecone the assistant searches the records by keyword.
+- Blog (`module/blog-post`): drafts are hidden; publishing sets `publishedAt`, and a future date schedules the post.
+  Bangla fields are optional and fall back to English. AI Studio saves drafts with `aiGenerated` and the picture plan in
+  `aiMeta`; pictures and the Bangla version are separate requests to stay inside Vercel's five minutes.
 - Uploaded files go to `UPLOAD_DIR` and are served at `/uploads`. The file type comes from its first bytes, never the name.
 
 ## Media storage
