@@ -158,7 +158,7 @@ AiRouter.post(
   catchAsync(async (req, res) => {
     const value = await AiSettings.load();
     const { query, locale } = req.body as { query: string; locale: 'en' | 'bn' };
-    const result = await agentJson<{ results: unknown[] }>('/v1/search', { query, locale, retrieval: await retrievalConfig(value, AiDocuments.cachedForChat) });
+    const result = await agentJson<{ results: unknown[] }>('/v1/search', { query, locale, retrieval: await retrievalConfig(value, () => AiDocuments.forQuery(query)) });
     sendResponse(res, 200, 'Search done', result.results);
   }),
 );

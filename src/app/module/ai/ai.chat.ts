@@ -77,7 +77,8 @@ const stream = async (req: Request, res: Response, audience: Audience) => {
     audience,
     messages,
     chat_model: modelConfig(value, 'chat'),
-    retrieval: await retrievalConfig(value, AiDocuments.cachedForChat),
+    // A follow-up such as "and the price?" needs the question before it
+    retrieval: await retrievalConfig(value, () => AiDocuments.forQuery(messages.filter((message) => message.role === 'user').slice(-2).map((message) => message.content).join(' '))),
     assistant: await assistantSettings(value, locale, audience),
     langsmith: langsmithConfig(value),
   };

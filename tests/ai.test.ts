@@ -5,6 +5,7 @@ import { app } from '../src/app.js';
 import { config } from '../src/app/config/index.js';
 import { prisma } from '../src/app/lib/prisma.js';
 import { checkPublicUrl } from '../src/app/lib/safeUrl.js';
+import { AiDocuments } from '../src/app/module/ai/ai.documents.js';
 import { decryptSecret, encryptSecret } from '../src/app/lib/secrets.js';
 
 const API = '/api/v1';
@@ -183,6 +184,27 @@ describe('blog posts', () => {
   it('records changes in the activity log', async () => {
     const entry = await prisma.activityLog.findFirst({ where: { resource: 'blog-posts' }, orderBy: { createdAt: 'desc' } });
     expect(entry?.summary).toContain('Fast websites sell more');
+  });
+});
+
+describe('assistant documents', () => {
+  const slug = 'ai-test-starter';
+
+  afterAll(async () => {
+    await prisma.pricingPlan.deleteMany({ where: { slug } });
+  });
+
+  it('write prices out and keep Bangla words whole', async () => {
+    await prisma.pricingPlan.deleteMany({ where: { slug } });
+    await prisma.pricingPlan.create({
+      data: { slug, name: { en: 'Zestful Starter', bn: 'জেস্টফুল স্টার্টার' }, tagline: { en: 'For small shops', bn: 'ছোট দোকানের জন্য' }, price: 19, currency: 'USD', features: [{ en: 'Five pages', bn: 'পাঁচটি পেজ' }] },
+    });
+    AiDocuments.clearCache();
+    const english = await AiDocuments.forQuery('How much is the zestful starter plan?');
+    const plan = english.find((document) => document.type === 'pricing' && document.locale === 'en' && document.title === 'Zestful Starter');
+    expect(plan?.text).toContain('Price: 19 USD');
+    const bangla = await AiDocuments.forQuery('জেস্টফুল স্টার্টার প্ল্যান');
+    expect(bangla.some((document) => document.locale === 'bn' && document.title === 'জেস্টফুল স্টার্টার')).toBe(true);
   });
 });
 

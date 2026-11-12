@@ -29,6 +29,12 @@ interface AiMeta {
   generatedAt: string;
 }
 
+interface Brief {
+  topic: string;
+  keywords?: string[];
+}
+const briefQuery = (brief: Brief) => [brief.topic, ...(brief.keywords ?? [])].join(' ');
+
 const actor = (req: Request) => ({ actorId: req.user!.id, actorName: req.user!.name, actorEmail: req.user!.email, ip: clientIp(req) });
 
 const requireWriter = (value: AiSettingsValue) => {
@@ -51,7 +57,7 @@ const outline = async (body: Record<string, unknown>) => {
   try {
     const result = await agentJson<{ outline: unknown }>(
       '/v1/blog/outline',
-      { brief: body.brief, writing_model: modelConfig(value, 'writing'), retrieval: await retrievalConfig(value, AiDocuments.cachedForChat), site_name: await siteName(), langsmith: langsmithConfig(value) },
+      { brief: body.brief, writing_model: modelConfig(value, 'writing'), retrieval: await retrievalConfig(value, () => AiDocuments.forQuery(briefQuery(body.brief as Brief))), site_name: await siteName(), langsmith: langsmithConfig(value) },
       { timeoutMs: 150_000 },
     );
     await AiUsage.record('outline');
@@ -83,7 +89,7 @@ const write = async (req: Request, res: Response) => {
         brief,
         outline: plan,
         writing_model: modelConfig(value, 'writing'),
-        retrieval: await retrievalConfig(value, AiDocuments.cachedForChat),
+        retrieval: await retrievalConfig(value, () => AiDocuments.forQuery(`${briefQuery(brief as Brief)} ${plan.title}`)),
         site_name: await siteName(),
         languages,
         max_pictures: pictures,

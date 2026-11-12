@@ -61,9 +61,14 @@ const rowsToDocuments = (type: string, rows: Record<string, Json>[], url: (row: 
   rows.flatMap((row) =>
     LOCALES.filter((locale) => hasLocale(row, locale)).map((locale): AiDocument => {
       const title = titleOf(row, locale);
-      const body = Object.entries(row)
-        .filter(([key]) => !SKIP.test(key) && !['title', 'name'].includes(key))
-        .flatMap(([, value]) => textOf(value, locale))
+      // Numbers are left out as field values, so a price is written out as a sentence the assistant can quote
+      const price = typeof row.price === 'number' ? [`Price: ${[textOf(row.priceLabel, locale)[0], row.price, row.currency].filter((part) => part !== undefined && part !== '').join(' ')}`] : [];
+      const body = [
+        ...price,
+        ...Object.entries(row)
+          .filter(([key]) => !SKIP.test(key) && !['title', 'name', 'currency', 'priceLabel'].includes(key))
+          .flatMap(([, value]) => textOf(value, locale)),
+      ]
         .join('\n')
         .replace(/\n{3,}/g, '\n\n')
         .trim();
@@ -151,4 +156,29 @@ const cachedForChat = async () => {
   return documents;
 };
 
-export const AiDocuments = { build, cachedForChat, clearCache: () => (cached = null) };
+// Letters, numbers and marks: without \p{M} Bangla words split at their vowel signs
+const WORD = /[\p{L}\p{M}\p{N}]+/gu;
+const words = (text: string) => new Set((text.toLowerCase().match(WORD) ?? []).filter((word) => word.length > 1));
+// Records that should always be at hand: how to get in touch
+const ALWAYS = new Set(['contact', 'site-text:contact-details']);
+
+// Without Pinecone the records travel with every message. Sending only those that share words with the question keeps
+// each request small; the AI service then ranks the passages properly. Rare words count more than common ones, so
+// "starter" finds the pricing plan while "how" and "the" decide nothing.
+const forQuery = async (query: string, limit = 30) => {
+  const documents = await cachedForChat();
+  const indexed = documents.map((document) => ({ document, title: words(document.title), body: words(document.text) }));
+  const terms = [...words(query)];
+  const rarity = new Map(terms.map((term) => [term, Math.log((indexed.length + 1) / (indexed.filter((item) => item.title.has(term) || item.body.has(term)).length + 0.5))]));
+  const scored = indexed.map(({ document, title, body }) => ({
+    document,
+    score: terms.reduce((sum, term) => sum + Math.max(rarity.get(term)!, 0) * ((title.has(term) ? 3 : 0) + (body.has(term) ? 1 : 0)), 0),
+  }));
+  const always = scored.filter(({ document }) => ALWAYS.has(document.type) || ALWAYS.has(`${document.type}:${document.id}`));
+  const matching = scored.filter((item) => item.score > 0.5 && !always.includes(item)).sort((a, b) => b.score - a.score);
+  // Nothing in common, such as a greeting: the questions, answers and plans still help
+  const fallback = matching.length ? [] : scored.filter(({ document }) => document.type === 'faq' || document.type === 'pricing');
+  return [...always, ...matching, ...fallback].slice(0, limit).map(({ document }) => document);
+};
+
+export const AiDocuments = { build, cachedForChat, forQuery, clearCache: () => (cached = null) };
