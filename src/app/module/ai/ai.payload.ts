@@ -12,6 +12,7 @@ export const modelConfig = (value: AiSettingsValue, slot: ModelSlot) => {
     api_key: readKey(stored, slot) ?? '',
     ...(stored.baseUrl ? { base_url: stored.baseUrl } : {}),
     ...(stored.hfProvider ? { hf_provider: stored.hfProvider } : {}),
+    ...(stored.accountId ? { account_id: stored.accountId } : {}),
     // Until Test says otherwise, the model is assumed to support both
     ...(slot === 'chat' || slot === 'writing' ? { tools: stored.tested?.tools ?? true, structured: stored.tested?.structured ?? true } : {}),
   };

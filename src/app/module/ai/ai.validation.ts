@@ -3,7 +3,7 @@ import { slugSchema } from '../../utils/validators.js';
 
 export const CHAT_PROVIDERS = ['openai', 'anthropic', 'google_genai', 'groq', 'mistralai', 'huggingface', 'openai_compatible', 'fake'] as const;
 export const EMBEDDING_PROVIDERS = ['openai', 'google_genai', 'mistralai', 'huggingface', 'openai_compatible', 'fake'] as const;
-export const IMAGE_PROVIDERS = ['openai', 'google_genai', 'huggingface', 'fake'] as const;
+export const IMAGE_PROVIDERS = ['openai', 'google_genai', 'huggingface', 'cloudflare', 'fake'] as const;
 
 export const MODEL_SLOTS = ['chat', 'writing', 'image', 'embedding'] as const;
 export type ModelSlot = (typeof MODEL_SLOTS)[number];
@@ -19,13 +19,15 @@ const modelName = z.string().trim().max(200).regex(/^[A-Za-z0-9._:/@+-]*$/, 'Mod
 const price = z.number().min(0).max(10_000);
 
 const slotInput = z.strictObject({
-  provider: z.union([z.enum(CHAT_PROVIDERS), z.enum(EMBEDDING_PROVIDERS), z.literal('')]).optional(),
+  provider: z.union([z.enum(CHAT_PROVIDERS), z.enum(EMBEDDING_PROVIDERS), z.enum(IMAGE_PROVIDERS), z.literal('')]).optional(),
   model: modelName.optional(),
   // A new key replaces the saved one. Leaving it out keeps the saved key.
   apiKey: z.string().trim().min(8, 'This key looks too short').max(4096).optional(),
   clearApiKey: z.boolean().optional(),
   baseUrl: z.string().trim().max(500).optional(),
   hfProvider: z.string().trim().regex(/^[a-z0-9-]{0,40}$/).optional(),
+  // Cloudflare Workers AI only
+  accountId: z.string().trim().toLowerCase().regex(/^([0-9a-f]{32})?$/, 'The Cloudflare account ID is 32 letters and numbers').optional(),
   pricing: z.strictObject({ inputPerMillion: price.optional(), outputPerMillion: price.optional(), perPicture: price.optional() }).optional(),
 });
 
@@ -85,6 +87,7 @@ export const AiValidation = {
     apiKey: z.string().trim().max(4096).optional(),
     baseUrl: z.string().trim().max(500).optional(),
     hfProvider: z.string().trim().regex(/^[a-z0-9-]{0,40}$/).optional(),
+    accountId: z.string().trim().toLowerCase().regex(/^([0-9a-f]{32})?$/, 'The Cloudflare account ID is 32 letters and numbers').optional(),
     makePicture: z.boolean().optional(),
   }),
 

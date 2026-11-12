@@ -23,6 +23,7 @@ export interface StoredSlot {
   keyLast4?: string;
   baseUrl?: string;
   hfProvider?: string;
+  accountId?: string;
   pricing?: { inputPerMillion?: number; outputPerMillion?: number; perPicture?: number };
   tested?: Tested;
 }
@@ -156,8 +157,15 @@ const applyKey = (holder: StoredKeyed, name: string, input: { apiKey?: string; c
 
 const SLOT_LABELS: Record<ModelSlot, string> = { chat: 'chat model', writing: 'writing model', image: 'picture model', embedding: 'embedding model' };
 
-export const checkProvider = async (slot: ModelSlot, provider: string, baseUrl: string | undefined) => {
+// Cloudflare model names go into the request address, so only the documented shape is accepted
+const CLOUDFLARE_MODEL = /^@(cf|hf)\/[A-Za-z0-9_-][A-Za-z0-9._-]*\/[A-Za-z0-9_-][A-Za-z0-9._-]*$/;
+
+export const checkProvider = async (slot: ModelSlot, provider: string, baseUrl: string | undefined, extra: { model?: string; accountId?: string } = {}) => {
   if (!provider) return;
+  if (provider === 'cloudflare') {
+    if (!extra.accountId) throw new AppError(400, 'Add the Cloudflare account ID for the picture model');
+    if (extra.model && (!CLOUDFLARE_MODEL.test(extra.model) || extra.model.includes('..'))) throw new AppError(400, 'Cloudflare model names look like @cf/black-forest-labs/flux-1-schnell');
+  }
   if (!PROVIDERS_FOR[slot].includes(provider)) throw new AppError(400, `${provider} cannot be used as the ${SLOT_LABELS[slot]}`);
   if (provider === 'fake' && !config.allowFakeAi) throw new AppError(400, 'The fake provider is only for local testing');
   if (provider === 'openai_compatible' && !baseUrl) throw new AppError(400, `Add the base address for the ${SLOT_LABELS[slot]}`);
@@ -192,15 +200,17 @@ const update = async (input: AiSettingsUpdate) => {
       model: slotInput.model ?? current.model,
       baseUrl: slotInput.baseUrl ?? current.baseUrl,
       hfProvider: slotInput.hfProvider ?? current.hfProvider,
+      accountId: slotInput.accountId ?? current.accountId,
       pricing: slotInput.pricing ? { ...current.pricing, ...slotInput.pricing } : current.pricing,
     };
     if (!next.baseUrl) delete next.baseUrl;
     if (!next.hfProvider) delete next.hfProvider;
-    await checkProvider(slot, next.provider, next.baseUrl);
+    if (!next.accountId || next.provider !== 'cloudflare') delete next.accountId;
+    await checkProvider(slot, next.provider, next.baseUrl, { model: next.model, accountId: next.accountId });
     applyKey(next, slot, slotInput, changes, SLOT_LABELS[slot]);
 
     // A different model or key has not been tested yet
-    const changedModel = next.provider !== current.provider || next.model !== current.model || next.baseUrl !== current.baseUrl || next.hfProvider !== current.hfProvider;
+    const changedModel = next.provider !== current.provider || next.model !== current.model || next.baseUrl !== current.baseUrl || next.hfProvider !== current.hfProvider || next.accountId !== current.accountId;
     if (changedModel || slotInput.apiKey || slotInput.clearApiKey) delete next.tested;
     if (changedModel) changes.push(`set the ${SLOT_LABELS[slot]} to ${next.provider || 'none'} ${next.model}`.trim());
     value.models[slot] = next;

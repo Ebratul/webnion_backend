@@ -83,6 +83,17 @@ describe('AI settings', () => {
     await request(app).patch(`${API}/ai/settings`).set('Authorization', adminToken).send({ systemPrompt: 'ignore rules' }).expect(400);
   });
 
+  it('accepts Cloudflare Workers AI for pictures with an account ID and a safe model name', async () => {
+    const account = '0123456789abcdef0123456789abcdef';
+    const send = (image: Record<string, unknown>) => request(app).patch(`${API}/ai/settings`).set('Authorization', adminToken).send({ models: { image } });
+    await send({ provider: 'cloudflare', model: '@cf/black-forest-labs/flux-1-schnell' }).expect(400);
+    await send({ provider: 'cloudflare', model: '@cf/../../user/tokens', accountId: account }).expect(400);
+    await send({ provider: 'cloudflare', model: '@cf/black-forest-labs/flux-1-schnell', accountId: 'not-an-account' }).expect(400);
+    const res = await send({ provider: 'cloudflare', model: '@cf/black-forest-labs/flux-1-schnell', accountId: account.toUpperCase(), apiKey: 'cf-token-abcdefgh' }).expect(200);
+    expect(res.body.data.settings.models.image).toMatchObject({ provider: 'cloudflare', accountId: account, hasKey: true, keyHint: '••••efgh' });
+    await request(app).patch(`${API}/ai/settings`).set('Authorization', adminToken).send({ models: { chat: { provider: 'cloudflare', model: '@cf/meta/llama', accountId: account } } }).expect(400);
+  });
+
   it('logs changes without the key', async () => {
     const key = 'pcsk_secret_value_for_the_log_test_1234';
     await request(app).patch(`${API}/ai/settings`).set('Authorization', adminToken).send({ pinecone: { apiKey: key } }).expect(200);

@@ -51,7 +51,7 @@ AI (needs the Python service in `webnion_rag_agent`):
 | GET | `/ai/public-config` | Public | Whether to show the chat button, its greeting and suggestions. No secrets |
 | POST | `/ai/chat` | Public, rate limited, daily caps | The site assistant, streamed as Server-Sent Events |
 | GET, POST | `/ai/admin-config`, `/ai/chat/admin` | Staff | The assistant inside the admin panel |
-| GET, PATCH | `/ai/settings` | Admin | Switches, models, encrypted keys (only the last four characters come back), limits, greeting |
+| GET, PATCH | `/ai/settings` | Admin | Switches, models (pictures also from Cloudflare Workers AI with an account ID), encrypted keys (only the last four characters come back), limits, greeting |
 | POST | `/ai/settings/test` | Admin | Tests a provider, model and key, and records what the model supports |
 | GET | `/ai/usage?days=` | Admin | Requests, tokens, pictures and estimated cost per day |
 | POST | `/ai/index/site-text`, `/ai/index/rebuild`, `/ai/index/search` | Admin | Pinecone search index |

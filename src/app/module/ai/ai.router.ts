@@ -87,15 +87,15 @@ AiRouter.post(
   studioLimiter,
   validateRequest({ body: AiValidation.test }),
   catchAsync(async (req, res) => {
-    const input = req.body as { slot: ModelSlot; provider: string; model: string; apiKey?: string; baseUrl?: string; hfProvider?: string; makePicture?: boolean };
+    const input = req.body as { slot: ModelSlot; provider: string; model: string; apiKey?: string; baseUrl?: string; hfProvider?: string; accountId?: string; makePicture?: boolean };
     const value = await AiSettings.load();
     const saved = value.models[input.slot];
-    await checkProvider(input.slot, input.provider, input.baseUrl || undefined);
+    await checkProvider(input.slot, input.provider, input.baseUrl || undefined, { model: input.model, accountId: input.accountId || undefined });
     const apiKey = input.apiKey || readKey(saved, input.slot) || '';
     if (!apiKey && input.provider !== 'fake') throw new AppError(400, 'Paste the API key, or save one first');
 
     const kind = input.slot === 'image' ? 'image' : input.slot === 'embedding' ? 'embedding' : 'chat';
-    const model = { provider: input.provider, model: input.model, api_key: apiKey, ...(input.baseUrl ? { base_url: input.baseUrl } : {}), ...(input.hfProvider ? { hf_provider: input.hfProvider } : {}) };
+    const model = { provider: input.provider, model: input.model, api_key: apiKey, ...(input.baseUrl ? { base_url: input.baseUrl } : {}), ...(input.hfProvider ? { hf_provider: input.hfProvider } : {}), ...(input.accountId ? { account_id: input.accountId } : {}) };
     const result = await agentJson<{ ok: boolean; tools?: boolean | null; structured?: boolean | null; dimension?: number | null; picture?: boolean | null; latency_ms: number; error?: { code: string; message: string } }>(
       '/v1/models/test',
       { kind, model, make_picture: Boolean(input.makePicture) },
@@ -104,7 +104,7 @@ AiRouter.post(
     await AiUsage.record('test', { error: !result.ok, pictures: result.picture ? 1 : 0 });
 
     // Kept with the settings only when the tested values are the saved ones
-    const matchesSaved = saved.provider === input.provider && saved.model === input.model && (saved.baseUrl ?? '') === (input.baseUrl ?? '') && (saved.hfProvider ?? '') === (input.hfProvider ?? '') && (!input.apiKey || input.apiKey === readKey(saved, input.slot));
+    const matchesSaved = saved.provider === input.provider && saved.model === input.model && (saved.baseUrl ?? '') === (input.baseUrl ?? '') && (saved.hfProvider ?? '') === (input.hfProvider ?? '') && (saved.accountId ?? '') === (input.accountId ?? '') && (!input.apiKey || input.apiKey === readKey(saved, input.slot));
     if (matchesSaved) await AiSettings.saveTested(input.slot, { ok: result.ok, tools: result.tools ?? null, structured: result.structured ?? null, dimension: result.dimension ?? null, picture: result.picture ?? null, at: new Date().toISOString() });
     sendResponse(res, 200, result.ok ? 'Test passed' : 'Test failed', { ...result, saved: matchesSaved });
   }),
