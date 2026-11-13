@@ -8,6 +8,7 @@ export interface SiteSettings {
   homepage: { hidden: string[] } | null;
   navigation: Record<string, unknown> | null;
   options: { whatsappButton: boolean; inquiryEmails: string[]; budgets: unknown[]; takaPrices?: { showTakaInBangla: boolean; usdToBdt: number; roundTo: number } } | null;
+  pricingPage: Record<string, unknown> | null;
   text: { en: Record<string, string>; bn: Record<string, string> };
 }
 
@@ -22,11 +23,12 @@ const get = async (): Promise<SiteSettings> => {
     homepage: (value('homepage') as SiteSettings['homepage']) ?? null,
     navigation: (value('navigation') as SiteSettings['navigation']) ?? null,
     options: (value('options') as SiteSettings['options']) ?? null,
+    pricingPage: (value('pricingPage') as SiteSettings['pricingPage']) ?? null,
     text: (value('text') as SiteSettings['text']) ?? { en: {}, bn: {} },
   };
 };
 
-const update = async (input: Partial<Record<'contact' | 'images' | 'brand' | 'homepage' | 'navigation' | 'options' | 'text', Prisma.InputJsonValue>>) => {
+const update = async (input: Partial<Record<'contact' | 'images' | 'brand' | 'homepage' | 'navigation' | 'options' | 'pricingPage' | 'text', Prisma.InputJsonValue>>) => {
   await prisma.$transaction(
     Object.entries(input).map(([key, value]) =>
       prisma.siteSetting.upsert({ where: { key }, update: { value: value! }, create: { key, value: value! } }),

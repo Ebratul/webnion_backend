@@ -73,6 +73,13 @@ const options = z.strictObject({
 });
 
 // Homepage sections the admin has hidden, by name, such as "process"
+// The Pricing page's lists: what every plan includes, the steps after booking, and the other services offered
+const pricingPage = z.strictObject({
+  included: z.array(localizedTextSchema).max(10),
+  steps: z.array(z.strictObject({ title: localizedTextSchema, text: localizedTextSchema })).min(1).max(6),
+  extras: z.array(localizedTextSchema).max(40),
+});
+
 const homepage = z.strictObject({
   hidden: z.array(z.string().regex(/^[a-zA-Z]{1,40}$/)).max(30),
 });
@@ -88,6 +95,7 @@ const update = z
     homepage: homepage.optional(),
     navigation: navigation.optional(),
     options: options.optional(),
+    pricingPage: pricingPage.optional(),
     text: z.strictObject({ en: textOverrides, bn: textOverrides }).optional(),
   })
   .refine((value) => Object.keys(value).length > 0, 'Nothing to update');

@@ -249,6 +249,18 @@ describe('Taka prices', () => {
   });
 });
 
+describe('pricing page lists', () => {
+  it('save and refuse an empty step list or a missing language', async () => {
+    const pricingPage = { included: [{ en: 'Free call', bn: 'ফ্রি কল' }], steps: [{ title: { en: 'Call', bn: 'কল' }, text: { en: 'We talk.', bn: 'কথা বলি।' } }], extras: [{ en: 'Landing Pages', bn: 'ল্যান্ডিং পেজ' }] };
+    const res = await request(app).patch(`${API}/site-settings`).set('Authorization', adminToken).send({ pricingPage }).expect(200);
+    expect(res.body.data.pricingPage).toEqual(pricingPage);
+    await request(app).patch(`${API}/site-settings`).set('Authorization', adminToken).send({ pricingPage: { ...pricingPage, steps: [] } }).expect(400);
+    await request(app).patch(`${API}/site-settings`).set('Authorization', adminToken).send({ pricingPage: { ...pricingPage, extras: [{ en: 'Only English' }] } }).expect(400);
+    await request(app).patch(`${API}/site-settings`).send({ pricingPage }).expect(401);
+    await prisma.siteSetting.deleteMany({ where: { key: 'pricingPage' } });
+  });
+});
+
 describe('helpers', () => {
   it('binds an encrypted key to its slot', () => {
     if (!config.AI_SECRETS_KEY) return;
