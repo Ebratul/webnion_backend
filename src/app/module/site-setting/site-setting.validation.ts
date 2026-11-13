@@ -62,6 +62,14 @@ const options = z.strictObject({
   whatsappButton: z.boolean(),
   inquiryEmails: z.array(z.email().max(200)).min(1).max(10),
   budgets: z.array(localizedTextSchema).min(1).max(15),
+  // Prices are set in dollars. The Bangla site can show them in Taka at this rate, rounded to the nearest roundTo.
+  takaPrices: z
+    .strictObject({
+      showTakaInBangla: z.boolean(),
+      usdToBdt: z.number().positive('The rate must be above 0').max(1000),
+      roundTo: z.union([z.literal(1), z.literal(10), z.literal(50), z.literal(100), z.literal(500), z.literal(1000)]),
+    })
+    .optional(),
 });
 
 // Homepage sections the admin has hidden, by name, such as "process"

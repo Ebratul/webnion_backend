@@ -7,7 +7,7 @@ export interface SiteSettings {
   brand: Record<string, string | null> | null;
   homepage: { hidden: string[] } | null;
   navigation: Record<string, unknown> | null;
-  options: { whatsappButton: boolean; inquiryEmails: string[]; budgets: unknown[] } | null;
+  options: { whatsappButton: boolean; inquiryEmails: string[]; budgets: unknown[]; takaPrices?: { showTakaInBangla: boolean; usdToBdt: number; roundTo: number } } | null;
   text: { en: Record<string, string>; bn: Record<string, string> };
 }
 

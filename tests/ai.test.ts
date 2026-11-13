@@ -236,6 +236,19 @@ describe('site pictures', () => {
   });
 });
 
+describe('Taka prices', () => {
+  it('keep the rate the admin sets and refuse a bad one', async () => {
+    const options = { whatsappButton: true, inquiryEmails: ['hello@example.com'], budgets: [{ en: 'Under $500', bn: '৫০০ ডলারের কম' }] };
+    await request(app).patch(`${API}/site-settings`).set('Authorization', adminToken).send({ options }).expect(200);
+    const res = await request(app).patch(`${API}/site-settings`).set('Authorization', adminToken).send({ options: { ...options, takaPrices: { showTakaInBangla: true, usdToBdt: 121.5, roundTo: 100 } } }).expect(200);
+    expect(res.body.data.options.takaPrices).toEqual({ showTakaInBangla: true, usdToBdt: 121.5, roundTo: 100 });
+    for (const takaPrices of [{ showTakaInBangla: true, usdToBdt: 0, roundTo: 100 }, { showTakaInBangla: true, usdToBdt: 120, roundTo: 7 }, { showTakaInBangla: 'yes', usdToBdt: 120, roundTo: 10 }]) {
+      await request(app).patch(`${API}/site-settings`).set('Authorization', adminToken).send({ options: { ...options, takaPrices } }).expect(400);
+    }
+    await prisma.siteSetting.deleteMany({ where: { key: 'options' } });
+  });
+});
+
 describe('helpers', () => {
   it('binds an encrypted key to its slot', () => {
     if (!config.AI_SECRETS_KEY) return;
