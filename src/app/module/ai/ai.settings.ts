@@ -43,6 +43,7 @@ export interface AiSettingsValue {
   langsmith: StoredKeyed & { project: string };
   limits: { messagesPerVisitorPerDay: number; publicMessagesPerDay: number; blogsPerDay: number; picturesPerBlog: number; picturesPerDay: number; maxReplyTokens: number };
   assistant: { name: Record<Locale, string>; greeting: Record<Locale, string>; suggestions: Record<Locale, string[]>; tone: string };
+  studio: { pictureStyle: string };
   index: { signature?: string; dimension?: number; documents?: number; passages?: number; lastSyncAt?: string; lastRebuildAt?: string; lastError?: string };
 }
 
@@ -69,6 +70,7 @@ export const DEFAULT_SETTINGS: AiSettingsValue = {
     },
     tone: 'Friendly, clear and professional. Short sentences.',
   },
+  studio: { pictureStyle: '' },
   index: {},
 };
 
@@ -90,6 +92,7 @@ const merge = (stored: Partial<AiSettingsValue> | null): AiSettingsValue => {
       suggestions: { ...DEFAULT_SETTINGS.assistant.suggestions, ...value.assistant?.suggestions },
       tone: value.assistant?.tone ?? DEFAULT_SETTINGS.assistant.tone,
     },
+    studio: { ...DEFAULT_SETTINGS.studio, ...value.studio },
     index: { ...value.index },
   };
 };
@@ -230,6 +233,10 @@ const update = async (input: AiSettingsUpdate) => {
   if (input.limits) {
     value.limits = { ...value.limits, ...input.limits };
     changes.push('limits');
+  }
+  if (input.studio) {
+    value.studio = { ...value.studio, ...input.studio };
+    changes.push('blog picture style');
   }
   if (input.assistant) {
     value.assistant = { ...value.assistant, ...input.assistant };

@@ -94,6 +94,12 @@ describe('AI settings', () => {
     await request(app).patch(`${API}/ai/settings`).set('Authorization', adminToken).send({ models: { chat: { provider: 'cloudflare', model: '@cf/meta/llama', accountId: account } } }).expect(400);
   });
 
+  it('saves the blog picture style', async () => {
+    const res = await request(app).patch(`${API}/ai/settings`).set('Authorization', adminToken).send({ studio: { pictureStyle: 'Clean 3D illustrations with soft light' } }).expect(200);
+    expect(res.body.data.settings.studio.pictureStyle).toBe('Clean 3D illustrations with soft light');
+    await request(app).patch(`${API}/ai/settings`).set('Authorization', adminToken).send({ studio: { pictureStyle: 'x'.repeat(601) } }).expect(400);
+  });
+
   it('logs changes without the key', async () => {
     const key = 'pcsk_secret_value_for_the_log_test_1234';
     await request(app).patch(`${API}/ai/settings`).set('Authorization', adminToken).send({ pinecone: { apiKey: key } }).expect(200);
@@ -216,6 +222,17 @@ describe('assistant documents', () => {
     expect(plan?.text).toContain('Price: 19 USD');
     const bangla = await AiDocuments.forQuery('জেস্টফুল স্টার্টার প্ল্যান');
     expect(bangla.some((document) => document.locale === 'bn' && document.title === 'জেস্টফুল স্টার্টার')).toBe(true);
+  });
+});
+
+describe('site pictures', () => {
+  it('accept the Problems section picture, and settings saved without it', async () => {
+    const images = { outcomeFounder: '/a.webp', outcomeHandover: '/b.webp', outcomeTeam: '/c.webp', serviceContactCard: '/d.webp', servicesClosingPreview: '/e.webp' };
+    await request(app).patch(`${API}/site-settings`).set('Authorization', adminToken).send({ images }).expect(200);
+    const res = await request(app).patch(`${API}/site-settings`).set('Authorization', adminToken).send({ images: { ...images, problems: '/images/services/optimization.webp' } }).expect(200);
+    expect(res.body.data.images.problems).toBe('/images/services/optimization.webp');
+    await request(app).patch(`${API}/site-settings`).set('Authorization', adminToken).send({ images: { ...images, problems: 'javascript:alert(1)' } }).expect(400);
+    await prisma.siteSetting.deleteMany({ where: { key: 'images' } });
   });
 });
 

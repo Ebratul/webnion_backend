@@ -68,6 +68,8 @@ export const AiValidation = {
       })
       .partial()
       .optional(),
+    // AI Studio: the house style for blog pictures. Empty means one built from the brand colour.
+    studio: z.strictObject({ pictureStyle: z.string().trim().max(600) }).partial().optional(),
     assistant: z
       .strictObject({
         name: localizedLine(60),

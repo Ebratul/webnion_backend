@@ -8,7 +8,7 @@ import { ActivityLogService, clientIp } from '../activity-log/activity-log.servi
 import { BlogPostService } from '../blog-post/blog-post.service.js';
 import { UploadService } from '../upload/upload.service.js';
 import { AiDocuments } from './ai.documents.js';
-import { langsmithConfig, modelConfig, retrievalConfig, siteName } from './ai.payload.js';
+import { langsmithConfig, modelConfig, pictureStyle, retrievalConfig, siteName } from './ai.payload.js';
 import { AiSettings, slotReady, type AiSettingsValue } from './ai.settings.js';
 import { AiUsage } from './ai.usage.js';
 
@@ -93,6 +93,7 @@ const write = async (req: Request, res: Response) => {
         site_name: await siteName(),
         languages,
         max_pictures: pictures,
+        picture_style: await pictureStyle(value),
         langsmith: langsmithConfig(value),
       },
       { timeoutMs: 295_000, signal: abort.signal },

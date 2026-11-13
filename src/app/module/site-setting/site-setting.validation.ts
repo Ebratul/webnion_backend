@@ -21,6 +21,8 @@ const images = z.strictObject({
   outcomeTeam: assetSchema,
   serviceContactCard: assetSchema,
   servicesClosingPreview: assetSchema,
+  // The picture in the homepage's Problems card. Optional, so settings saved before it existed stay valid.
+  problems: assetSchema.optional(),
 });
 
 // Name, logos and colour. The colour must be a six-digit hex so it can go straight into the site's stylesheet.

@@ -37,3 +37,24 @@ export const retrievalConfig = (value: AiSettingsValue, documents: () => Promise
   usesPinecone(value) ? Promise.resolve({ embedding: modelConfig(value, 'embedding'), pinecone: pineconeConfig(value) }) : documents().then((items) => ({ documents: items }));
 
 export const siteName = async () => String((await SiteSettingService.get().catch(() => null))?.brand?.siteName || 'Webnion').slice(0, 60);
+
+// A rough colour name for the brand colour: picture models follow "violet" far better than "#8224e3"
+const colourName = (hex: string) => {
+  const match = /^#?([0-9a-f]{6})$/i.exec(hex);
+  if (!match) return 'violet';
+  const [r, g, b] = [0, 2, 4].map((start) => parseInt(match[1]!.slice(start, start + 2), 16) / 255) as [number, number, number];
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  if (max - min < 0.12) return max > 0.7 ? 'soft grey' : 'charcoal';
+  const hue = max === r ? ((g - b) / (max - min) + 6) % 6 : max === g ? (b - r) / (max - min) + 2 : (r - g) / (max - min) + 4;
+  // One name for each 30 degrees of hue, starting at red
+  const names = ['red', 'orange', 'golden yellow', 'lime green', 'green', 'emerald green', 'cyan', 'azure blue', 'blue', 'violet', 'magenta', 'rose pink'];
+  return names[Math.floor((hue * 60 + 15) / 30) % 12]!;
+};
+
+// The house style for blog pictures: the admin's own, or a premium editorial look in the brand colour
+export const pictureStyle = async (value: AiSettingsValue) => {
+  if (value.studio.pictureStyle) return value.studio.pictureStyle.slice(0, 600);
+  const colour = colourName(String((await SiteSettingService.get().catch(() => null))?.brand?.primaryColor ?? '#8224e3'));
+  return `Modern editorial photography for a premium business magazine: soft natural window light, shallow depth of field, calm and uncluttered settings, warm neutral tones with subtle ${colour} accents that echo the brand colour.`;
+};
