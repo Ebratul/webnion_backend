@@ -261,6 +261,25 @@ describe('pricing page lists', () => {
   });
 });
 
+describe('footer company column', () => {
+  it('is saved with the menus and is optional', async () => {
+    const navigation = {
+      header: [{ label: { en: 'Pricing', bn: 'প্রাইসিং' }, href: '/pricing' }],
+      headerButton: { href: '/contact' },
+      footerQuick: [{ label: { en: 'Contact', bn: 'যোগাযোগ' }, href: '/contact' }],
+      footerServices: [],
+      socials: [],
+      offices: [],
+    };
+    await request(app).patch(`${API}/site-settings`).set('Authorization', adminToken).send({ navigation }).expect(200);
+    const company = [{ label: { en: 'Sister Brand', bn: 'সিস্টার ব্র্যান্ড' }, href: 'https://example.com' }, { label: { en: 'Insights', bn: 'ইনসাইটস' }, href: '/blog' }];
+    const res = await request(app).patch(`${API}/site-settings`).set('Authorization', adminToken).send({ navigation: { ...navigation, footerCompany: company } }).expect(200);
+    expect(res.body.data.navigation.footerCompany).toEqual(company);
+    await request(app).patch(`${API}/site-settings`).set('Authorization', adminToken).send({ navigation: { ...navigation, footerCompany: [{ label: { en: 'Bad', bn: 'Bad' }, href: 'javascript:alert(1)' }] } }).expect(400);
+    await prisma.siteSetting.deleteMany({ where: { key: 'navigation' } });
+  });
+});
+
 describe('helpers', () => {
   it('binds an encrypted key to its slot', () => {
     if (!config.AI_SECRETS_KEY) return;

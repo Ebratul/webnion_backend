@@ -52,6 +52,8 @@ const navigation = z.strictObject({
   header: z.array(link).max(12),
   headerButton: z.strictObject({ href: linkHref }),
   footerQuick: z.array(link).max(20),
+  // The footer's Company column: brands and company pages. Optional, so menus saved before it stay valid.
+  footerCompany: z.array(link).max(20).optional(),
   footerServices: z.array(link).max(20),
   socials: z.array(z.strictObject({ network: z.enum(SOCIAL_NETWORKS), url: httpUrlSchema })).max(15),
   offices: z.array(z.strictObject({ name: localizedTextSchema, address: localizedTextSchema })).max(8),
